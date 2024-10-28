@@ -1,0 +1,25 @@
+@keyframes scale-up {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.2);
+    }
+}
+
+.scale-up {
+    animation: scale-up 0.3s ease-in-out;
+}
+
+@keyframes scale-down {
+    from {
+        transform: scale(1.2);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.scale-down {
+    animation: scale-down 0.3s ease-in-out;
+}

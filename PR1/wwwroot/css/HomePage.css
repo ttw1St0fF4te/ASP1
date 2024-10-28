@@ -1,0 +1,59 @@
+@import '../animations/fade-in.css';
+
+.store-info, .feedback-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.store-info h1 {
+    font-size: 30px;
+    font-family: monospace;
+    margin-bottom: 20px;
+}
+
+.store-info p {
+    font-size: 20px;
+    font-family: monospace;
+    line-height: 1.5;
+}
+
+.feedback-form h2 {
+    font-size: 30px;
+    font-family: monospace;
+    margin-bottom: 20px;
+}
+
+.main-body {
+    background-image: url('../img/main-body-pic.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    position: relative;
+}
+
+.main-body a {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 50px;
+    text-decoration: none;
+    position: absolute;
+    z-index: 1;
+    transition: transform 0.3s ease-in-out;
+}
+
+.main-body a:hover {
+    color: #ce000c;
+    transform: scale(1.2);
+    animation: scale-up 0.3s ease-in-out forwards;
+}
+
+.main-body a:not(:hover) {
+    animation: scale-down 0.3s ease-in-out forwards;
+}
