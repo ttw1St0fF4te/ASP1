@@ -5,6 +5,22 @@
       "PackagePath": "staticwebassets/PR1.bundle.scp.css"
     },
     {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/animations/fade-in.css",
+      "PackagePath": "staticwebassets/animations/fade-in.css"
+    },
+    {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/animations/flash.css",
+      "PackagePath": "staticwebassets/animations/flash.css"
+    },
+    {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/animations/scale.css",
+      "PackagePath": "staticwebassets/animations/scale.css"
+    },
+    {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/CatalogPage.css",
+      "PackagePath": "staticwebassets/css/CatalogPage.css"
+    },
+    {
       "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/Footer.css",
       "PackagePath": "staticwebassets/css/Footer.css"
     },
@@ -23,6 +39,14 @@
     {
       "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/favicon.ico",
       "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/img/main-body-pic.jpg",
+      "PackagePath": "staticwebassets/img/main-body-pic.jpg"
+    },
+    {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/img/moe.png",
+      "PackagePath": "staticwebassets/img/moe.png"
     },
     {
       "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/js/site.js",
