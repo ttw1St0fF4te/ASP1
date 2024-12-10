@@ -10,7 +10,7 @@ using PR1.Data;
 
 namespace PR1.Migrations
 {
-    [DbContext(typeof(ProductContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20241128114103_init")]
     partial class init
     {

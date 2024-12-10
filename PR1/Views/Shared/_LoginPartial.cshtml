@@ -1,0 +1,34 @@
+<!-- Views/Shared/_LoginPartial.cshtml -->
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var context = HttpContextAccessor.HttpContext;
+    var user = context.User;
+}
+
+@if (user.Identity.IsAuthenticated)
+{
+    <ul class="login-partial">
+        <li>
+            <a href="/cart">Корзина</a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
+        </li>
+        <li>
+            <span>@user.Identity.Name</span>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="login-partial">
+        <li>
+            <a asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
+        </li>
+    </ul>
+}

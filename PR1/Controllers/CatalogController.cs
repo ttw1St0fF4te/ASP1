@@ -5,9 +5,9 @@ using PR1.Data;
 
 public class CatalogController : Controller
 {
-    private readonly ProductContext _context;
+    private readonly AppDbContext _context;
 
-    public CatalogController(ProductContext context)
+    public CatalogController(AppDbContext context)
     {
         _context = context;
     }
