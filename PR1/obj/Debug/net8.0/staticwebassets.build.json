@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "R4JvkRwt7VA571q8P8Sgel1C8fTzgBFeQr8yLFeMWT8=",
+  "Hash": "nHR4b5Hs+6ZeG1TgL00si9QqOrkN5Qr+VKCu1sojMbo=",
   "Source": "PR1",
   "BasePath": "_content/PR1",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/animations/scale.css"
+    },
+    {
+      "Identity": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/Account.css",
+      "SourceId": "PR1",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/",
+      "BasePath": "_content/PR1",
+      "RelativePath": "css/Account.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/Account.css"
     },
     {
       "Identity": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/CatalogPage.css",

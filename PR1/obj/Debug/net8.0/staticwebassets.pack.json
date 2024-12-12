@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets/animations/scale.css"
     },
     {
+      "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/Account.css",
+      "PackagePath": "staticwebassets/css/Account.css"
+    },
+    {
       "Id": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/CatalogPage.css",
       "PackagePath": "staticwebassets/css/CatalogPage.css"
     },
