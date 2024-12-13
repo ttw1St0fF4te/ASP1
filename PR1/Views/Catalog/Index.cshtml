@@ -25,6 +25,10 @@ ViewData["Title"] = "Catalog";
                 <img src="@product.Image" alt="@product.Name" />
                 <p>Price: @product.Price</p>
                 <p>@product.Description</p>
+                <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                    <input type="hidden" name="productId" value="@product.Id" />
+                    <button type="submit">Добавить в корзину</button>
+                </form>
             </div>
             }
         </div>

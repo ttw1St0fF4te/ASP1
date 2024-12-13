@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "nHR4b5Hs+6ZeG1TgL00si9QqOrkN5Qr+VKCu1sojMbo=",
+  "Hash": "DtCNuWGdUWYpZQUZgrz0i6IfaxvgbRB2TLXrBra1c8g=",
   "Source": "PR1",
   "BasePath": "_content/PR1",
   "Mode": "Default",
@@ -129,6 +129,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/css/Account.css"
+    },
+    {
+      "Identity": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/CartPage.css",
+      "SourceId": "PR1",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/",
+      "BasePath": "_content/PR1",
+      "RelativePath": "css/CartPage.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/CartPage.css"
     },
     {
       "Identity": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/wwwroot/css/CatalogPage.css",

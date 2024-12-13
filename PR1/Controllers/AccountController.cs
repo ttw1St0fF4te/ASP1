@@ -42,6 +42,7 @@ public class AccountController : Controller
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.UserRole.Role),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) // Add user ID claim
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -84,6 +85,7 @@ public class AccountController : Controller
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, "user"),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) // Add user ID claim
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

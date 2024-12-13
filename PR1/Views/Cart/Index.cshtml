@@ -1,0 +1,42 @@
+@model PR1.Models.Cart
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/CartPage.css" asp-append-version="true"/>
+</head>
+<body>
+<div class="cart-page">
+    <h1>Корзина</h1>
+    @if (Model.CartItems.Any())
+    {
+        <div class="cart-items">
+            @foreach (var item in Model.CartItems)
+            {
+                <div class="cart-item">
+                    <h3>@item.Product.Name</h3>
+                    <img src="@item.Product.Image" alt="@item.Product.Name" />
+                    <p>Price: @item.Product.Price</p>
+                    <p>Quantity: @item.Quantity</p>
+                    <p>@item.Product.Description</p>
+                    <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                        <input type="hidden" name="cartItemId" value="@item.Id" />
+                        <button type="submit">Удалить из корзины</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Ваша корзина пуста.</p>
+    }
+</div>
+</body>
+</html>
