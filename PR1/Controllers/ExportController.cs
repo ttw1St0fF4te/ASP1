@@ -49,20 +49,35 @@ namespace PR1.Controllers
                 using (var pdf = new PdfDocument(writer))
                 {
                     var document = new Document(pdf);
-                    document.Add(new Paragraph("Отчет по продажам").SetTextAlignment(TextAlignment.CENTER).SetFontSize(20));
 
-                    document.Add(new Paragraph($"Общее количество продаж: {viewModel.TotalSales}"));
+                    // Adding the title
+                    document.Add(new Paragraph("Sales Report")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFontSize(20));
 
+                    // Adding the total sales
+                    document.Add(new Paragraph($"Total Sales: {viewModel.TotalSales}")
+                        .SetTextAlignment(TextAlignment.LEFT)
+                        .SetFontSize(12));
+
+                    // Adding explanatory text
+                    document.Add(new Paragraph("This report provides information about product sales. The table below contains data on the number of units sold for each product.")
+                        .SetTextAlignment(TextAlignment.LEFT)
+                        .SetFontSize(12)
+                        .SetMarginBottom(20));
+
+                    // Creating the table
                     var table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
-                    table.AddHeaderCell("Товар");
-                    table.AddHeaderCell("Количество");
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Product")));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Quantity")));
 
                     foreach (var ps in viewModel.ProductSales)
                     {
-                        table.AddCell(ps.ProductName);
-                        table.AddCell(ps.TotalQuantity.ToString());
+                        table.AddCell(new Cell().Add(new Paragraph(ps.ProductName)));
+                        table.AddCell(new Cell().Add(new Paragraph(ps.TotalQuantity.ToString())));
                     }
 
+                    // Adding the table to the document
                     document.Add(table);
                 }
 
