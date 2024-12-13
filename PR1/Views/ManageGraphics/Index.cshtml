@@ -1,0 +1,91 @@
+@model PR1.Controllers.ManageGraphicsViewModel
+
+@{
+    ViewData["Title"] = "Manage Graphics";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Graphics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="manage-graphics">
+        <h1>Управление графикой</h1>
+        <div>
+            <canvas id="totalSalesChart" width="400" height="200"></canvas>
+        </div>
+        <div>
+            <canvas id="productSalesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var totalSales = @Model.TotalSales;
+            var productSales = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ProductSales));
+
+            // Total Sales Chart
+            var ctxTotalSales = document.getElementById('totalSalesChart').getContext('2d');
+            var totalSalesChart = new Chart(ctxTotalSales, {
+                type: 'bar',
+                data: {
+                    labels: ['Общее количество продаж'],
+                    datasets: [{
+                        label: 'Общее количество продаж',
+                        data: [totalSales],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Product Sales Chart
+            var ctxProductSales = document.getElementById('productSalesChart').getContext('2d');
+            var productSalesChart = new Chart(ctxProductSales, {
+                type: 'pie',
+                data: {
+                    labels: productSales.map(ps => ps.ProductName),
+                    datasets: [{
+                        label: 'Распределение продаж товаров',
+                        data: productSales.map(ps => ps.TotalQuantity),
+                        backgroundColor: productSales.map((ps, index) => {
+                            // Generate unique colors for each segment
+                            var colors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'];
+                            return colors[index % colors.length];
+                        }),
+                        borderColor: productSales.map((ps, index) => {
+                            var colors = ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'];
+                            return colors[index % colors.length];
+                        }),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Распределение продаж товаров'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

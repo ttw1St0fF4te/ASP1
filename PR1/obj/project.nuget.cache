@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "SXH5DI6cHVc=",
+  "dgSpecHash": "5LtlO+C7oxc=",
   "success": true,
   "projectFilePath": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/PR1.csproj",
   "expectedPackageFiles": [
@@ -27,6 +27,7 @@
     "/Users/keluch/.nuget/packages/microsoft.extensions.options/8.0.2/microsoft.extensions.options.8.0.2.nupkg.sha512",
     "/Users/keluch/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "/Users/keluch/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
+    "/Users/keluch/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
     "/Users/keluch/.nuget/packages/npgsql/8.0.6/npgsql.8.0.6.nupkg.sha512",
     "/Users/keluch/.nuget/packages/npgsql.entityframeworkcore.postgresql/8.0.11/npgsql.entityframeworkcore.postgresql.8.0.11.nupkg.sha512",
     "/Users/keluch/.nuget/packages/system.codedom/4.4.0/system.codedom.4.4.0.nupkg.sha512",
