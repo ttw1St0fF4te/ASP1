@@ -1,7 +1,7 @@
 @model PR1.Models.Cart
 
 @{
-    ViewData["Title"] = "Cart";
+ViewData["Title"] = "Cart";
 }
 
 <!DOCTYPE html>
@@ -16,26 +16,29 @@
     <h1>Корзина</h1>
     @if (Model.CartItems.Any())
     {
-        <div class="cart-items">
-            @foreach (var item in Model.CartItems)
-            {
-                <div class="cart-item">
-                    <h3>@item.Product.Name</h3>
-                    <img src="@item.Product.Image" alt="@item.Product.Name" />
-                    <p>Price: @item.Product.Price</p>
-                    <p>Quantity: @item.Quantity</p>
-                    <p>@item.Product.Description</p>
-                    <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
-                        <input type="hidden" name="cartItemId" value="@item.Id" />
-                        <button type="submit">Удалить из корзины</button>
-                    </form>
-                </div>
-            }
+    <div class="cart-items">
+        @foreach (var item in Model.CartItems)
+        {
+        <div class="cart-item">
+            <h3>@item.Product.Name</h3>
+            <img src="@item.Product.Image" alt="@item.Product.Name" />
+            <p>Price: @item.Product.Price</p>
+            <p>Quantity: @item.Quantity</p>
+            <p>@item.Product.Description</p>
+            <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                <input type="hidden" name="cartItemId" value="@item.Id" />
+                <button type="submit">Удалить из корзины</button>
+            </form>
         </div>
+        }
+    </div>
+    <form asp-action="PlaceOrder" asp-controller="Cart" method="post">
+        <button type="submit">Купить</button>
+    </form>
     }
     else
     {
-        <p>Ваша корзина пуста.</p>
+    <p>Ваша корзина пуста.</p>
     }
 </div>
 </body>

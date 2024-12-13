@@ -136,5 +136,57 @@ namespace PR1.Controllers
 
             return RedirectToAction("Index");
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PlaceOrder()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var cart = await _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Product)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            if (cart == null || !cart.CartItems.Any())
+            {
+                return NotFound();
+            }
+
+            var order = new Order
+            {
+                UserId = user.Id,
+                OrderDate = DateTime.UtcNow, // Use UTC time
+                OrderItems = new List<OrderItem>()
+            };
+
+            foreach (var cartItem in cart.CartItems)
+            {
+                var orderItem = new OrderItem
+                {
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity,
+                    Order = order
+                };
+                order.OrderItems.Add(orderItem);
+            }
+
+            _context.Orders.Add(order);
+            _context.Carts.Remove(cart);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
