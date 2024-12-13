@@ -16,11 +16,14 @@
     <div class="manage-graphics">
         <h1>Управление графикой</h1>
         <div>
-            <canvas id="totalSalesChart" width="400" height="200"></canvas>
+            <canvas id="totalSalesChart" width="100" height="50"></canvas>
         </div>
         <div>
-            <canvas id="productSalesChart" width="400" height="200"></canvas>
+            <canvas id="productSalesChart" width="100" height="50"></canvas>
         </div>
+        <form asp-controller="Export" asp-action="ExportSalesReport" method="get">
+            <button type="submit">Экспортировать отчет в PDF</button>
+        </form>
     </div>
 
     <script>

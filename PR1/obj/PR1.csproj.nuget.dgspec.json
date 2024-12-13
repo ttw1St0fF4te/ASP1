@@ -56,6 +56,14 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.11, )"
+            },
+            "itext7": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "itext7.bouncy-castle-adapter": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [
