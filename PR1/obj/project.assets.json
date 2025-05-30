@@ -6747,11 +6747,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/PR1.csproj",
+      "projectUniqueName": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/PR1.csproj",
       "projectName": "PR1",
-      "projectPath": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/PR1.csproj",
+      "projectPath": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/PR1.csproj",
       "packagesPath": "/Users/keluch/.nuget/packages/",
-      "outputPath": "/Users/keluch/Desktop/coledj/ASP/PR1/PR1/obj/",
+      "outputPath": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/keluch/.nuget/NuGet/NuGet.Config"
@@ -6842,6 +6842,12 @@
     }
   },
   "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
+    },
     {
       "code": "NU1701",
       "level": "Warning",

@@ -1,0 +1,25 @@
+@model Product
+
+<h2>@Model.Name</h2>
+<img src="@Model.Image" alt="@Model.Name" />
+<p>@Model.Description</p>
+<p>Цена: @Model.Price</p>
+@await Component.InvokeAsync("AverageRating", new { productId = Model.Id })
+<hr />
+
+<h3>Отзывы</h3>
+@foreach (var review in Model.Reviews)
+{
+    @Html.DisplayFor(model => review)
+}
+
+<hr />
+
+@if (User.Identity.IsAuthenticated)
+{
+    @await Html.PartialAsync("_AddReview", new ReviewViewModel { ProductId = Model.Id })
+}
+else
+{
+    <p>Войдите, чтобы оставить отзыв.</p>
+}

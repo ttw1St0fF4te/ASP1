@@ -1,0 +1,21 @@
+@model ReviewViewModel
+
+<form asp-controller="Review" asp-action="Create" method="post">
+    <input type="hidden" asp-for="ProductId" />
+
+    <label>Оценка:</label>
+    <select asp-for="Rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+
+    <br />
+    
+    <textarea asp-for="Text" placeholder="Текст отзыва"></textarea>
+    <br />
+
+    <button type="submit">Отправить отзыв</button>
+</form>

@@ -21,7 +21,9 @@ ViewData["Title"] = "Catalog";
             @foreach (var product in Model)
             {
             <div class="product">
-                <h3>@product.Name</h3>
+                <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id">
+                    <h3>@product.Name</h3>
+                </a>
                 <img src="@product.Image" alt="@product.Name" />
                 <p>Price: @product.Price</p>
                 <p>@product.Description</p>

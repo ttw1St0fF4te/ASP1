@@ -1,0 +1,10 @@
+@model AverageRatingViewModel
+
+<div>
+    <strong>Средняя оценка:</strong>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <span style="color: @(i <= Model.AverageRating ? "gold" : "gray")">&#9733;</span>
+    }
+    <span>(@Model.AverageRating.ToString("0.0"))</span>
+</div>
