@@ -139,6 +139,110 @@ namespace PR1.Controllers
 
             return RedirectToAction("Index");
         }
+
+        // Новый метод для увеличения количества товара
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IncreaseQuantity(int cartItemId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "Пользователь не авторизован" });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Пользователь не найден" });
+            }
+
+            var cart = await _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Product)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            if (cart == null)
+            {
+                return Json(new { success = false, message = "Корзина не найдена" });
+            }
+
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+            if (cartItem == null)
+            {
+                return Json(new { success = false, message = "Товар в корзине не найден" });
+            }
+
+            if (cartItem.Quantity >= 10)
+            {
+                return Json(new { success = false, message = "Уже указано максимальное кол-во позиций на товар (10)" });
+            }
+
+            cartItem.Quantity += 1;
+            await _context.SaveChangesAsync();
+
+            // Пересчитываем общую сумму корзины
+            var totalSum = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price);
+
+            return Json(new { 
+                success = true, 
+                newQuantity = cartItem.Quantity,
+                itemTotal = cartItem.Quantity * cartItem.Product.Price,
+                cartTotal = totalSum
+            });
+        }
+
+        // Новый метод для уменьшения количества товара
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DecreaseQuantity(int cartItemId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "Пользователь не авторизован" });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Пользователь не найден" });
+            }
+
+            var cart = await _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Product)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            if (cart == null)
+            {
+                return Json(new { success = false, message = "Корзина не найдена" });
+            }
+
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+            if (cartItem == null)
+            {
+                return Json(new { success = false, message = "Товар в корзине не найден" });
+            }
+
+            if (cartItem.Quantity <= 1)
+            {
+                return Json(new { success = false, message = "Число товара минимальное, если хотите удалить товар, нажмите на соответствующую кнопку" });
+            }
+
+            cartItem.Quantity -= 1;
+            await _context.SaveChangesAsync();
+
+            // Пересчитываем общую сумму корзины
+            var totalSum = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price);
+
+            return Json(new { 
+                success = true, 
+                newQuantity = cartItem.Quantity,
+                itemTotal = cartItem.Quantity * cartItem.Product.Price,
+                cartTotal = totalSum
+            });
+        }
         
         [HttpPost]
         [ValidateAntiForgeryToken]

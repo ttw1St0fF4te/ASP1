@@ -13,18 +13,34 @@ ViewData["Title"] = "Cart";
 </head>
 <body>
 <div class="cart-page">
+    @Html.AntiForgeryToken()
     <h1>Корзина</h1>
+
+    <div id="message-container">
+        <div id="message" class="message"></div>
+    </div>
+
     @if (Model.CartItems.Any())
     {
     <div class="cart-items">
         @foreach (var item in Model.CartItems)
         {
-        <div class="cart-item">
+        <div class="cart-item" data-item-id="@item.Id">
             <h3>@item.Product.Name</h3>
             <img src="@item.Product.Image" alt="@item.Product.Name" />
-            <p>Цена: @item.Product.Price</p>
-            <p>Кол-во: @item.Quantity</p>
+            <p>Цена: @item.Product.Price руб.</p>
             <p>@item.Product.Description</p>
+
+            <div class="quantity-controls">
+                <button type="button" class="quantity-btn decrease-btn" data-item-id="@item.Id">-</button>
+                <span class="quantity-display" id="quantity-@item.Id">@item.Quantity</span>
+                <button type="button" class="quantity-btn increase-btn" data-item-id="@item.Id">+</button>
+            </div>
+
+            <p class="item-total" id="item-total-@item.Id">
+                Итого: <span>@((item.Quantity * item.Product.Price).ToString("F2"))</span> руб.
+            </p>
+
             <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
                 <input type="hidden" name="cartItemId" value="@item.Id" />
                 <button type="submit">Удалить из корзины</button>
@@ -32,6 +48,11 @@ ViewData["Title"] = "Cart";
         </div>
         }
     </div>
+
+    <div class="cart-total">
+        <h3 id="cart-total">Общая сумма: @(Model.CartItems.Sum(ci => ci.Quantity * ci.Product.Price).ToString("F2")) руб.</h3>
+    </div>
+
     <form asp-action="PlaceOrder" asp-controller="Cart" method="post">
         <button type="submit">Купить</button>
     </form>
@@ -41,5 +62,107 @@ ViewData["Title"] = "Cart";
     <p>Ваша корзина пуста.</p>
     }
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем токен для защиты от CSRF
+        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        const token = tokenInput ? tokenInput.value : '';
+
+        if (!token) {
+            console.error('CSRF token not found!');
+            return;
+        }
+
+        // Функция для показа сообщений
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('message');
+            const messageContainer = document.getElementById('message-container');
+
+            messageDiv.textContent = message;
+            messageDiv.className = 'message ' + (isError ? 'error' : 'success');
+            messageDiv.style.display = 'block';
+
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Обработчики для кнопок увеличения количества
+        document.querySelectorAll('.increase-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+
+                const formData = new FormData();
+                formData.append('cartItemId', itemId);
+                formData.append('__RequestVerificationToken', token);
+
+                fetch('/Cart/IncreaseQuantity', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Обновляем количество
+                            document.getElementById(`quantity-${itemId}`).textContent = data.newQuantity;
+
+                            // Обновляем сумму по товару
+                            document.querySelector(`#item-total-${itemId} span`).textContent = data.itemTotal.toFixed(2);
+
+                            // Обновляем общую сумму корзины
+                            document.getElementById('cart-total').textContent = `Общая сумма: ${data.cartTotal.toFixed(2)} руб.`;
+
+                            showMessage('Количество товара увеличено');
+                        } else {
+                            showMessage(data.message, true);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showMessage('Произошла ошибка при обновлении количества', true);
+                    });
+            });
+        });
+
+        // Обработчики для кнопок уменьшения количества
+        document.querySelectorAll('.decrease-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+
+                const formData = new FormData();
+                formData.append('cartItemId', itemId);
+                formData.append('__RequestVerificationToken', token);
+
+                fetch('/Cart/DecreaseQuantity', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Обновляем количество
+                            document.getElementById(`quantity-${itemId}`).textContent = data.newQuantity;
+
+                            // Обновляем сумму по товару
+                            document.querySelector(`#item-total-${itemId} span`).textContent = data.itemTotal.toFixed(2);
+
+                            // Обновляем общую сумму корзины
+                            document.getElementById('cart-total').textContent = `Общая сумма: ${data.cartTotal.toFixed(2)} руб.`;
+
+                            showMessage('Количество товара уменьшено');
+                        } else {
+                            showMessage(data.message, true);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showMessage('Произошла ошибка при обновлении количества', true);
+                    });
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
