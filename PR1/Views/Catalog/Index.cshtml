@@ -17,32 +17,129 @@ ViewData["Title"] = "Catalog";
 <div class="fade-in">
     <div class="catalog-page">
         <h1>Каталог</h1>
+
+        <!-- Элементы управления поиском и сортировкой -->
+        <div class="catalog-controls">
+            <form method="get" action="@Url.Action("Index", "Catalog")" id="catalogForm">
+                <div class="search-container">
+                    <button type="submit" class="search-btn">🔍</button>
+                    <input type="text"
+                           name="searchTerm"
+                           value="@ViewBag.SearchTerm"
+                           placeholder="Поиск товаров..."
+                           class="search-input"
+                           id="searchInput" />
+                    <button type="button" class="clear-search" id="clearSearch">✕</button>
+                </div>
+
+                <input type="hidden" name="sortBy" value="@ViewBag.SortBy" id="hiddenSortBy" />
+                <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" id="hiddenSortOrder" />
+            </form>
+
+            <div class="sort-container">
+                <label>Сортировка:</label>
+                <select class="sort-select" id="sortSelect">
+                    <option value="">По умолчанию</option>
+                    <option value="price-asc" selected="@(ViewBag.SortBy == "price" && ViewBag.SortOrder == "asc")">Цена: по возрастанию</option>
+                    <option value="price-desc" selected="@(ViewBag.SortBy == "price" && ViewBag.SortOrder == "desc")">Цена: по убыванию</option>
+                    <option value="date-desc" selected="@(ViewBag.SortBy == "date" && ViewBag.SortOrder == "desc")">Дата: новые сначала</option>
+                    <option value="date-asc" selected="@(ViewBag.SortBy == "date" && ViewBag.SortOrder == "asc")">Дата: старые сначала</option>
+                    <option value="name-asc" selected="@(ViewBag.SortBy == "name" && ViewBag.SortOrder == "asc")">Название: А-Я</option>
+                    <option value="name-desc" selected="@(ViewBag.SortBy == "name" && ViewBag.SortOrder == "desc")">Название: Я-А</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Результаты поиска -->
+        @if (ViewBag.IsSearching && !ViewBag.HasResults)
+        {
+        <div class="no-results">
+            <p>Схожих результатов нет</p>
+        </div>
+        }
+        else
+        {
         <div class="product-list">
             @foreach (var product in Model)
             {
-                <div class="product">
-                    <h3>@product.Name</h3>
-                    <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id" class="product-link">
-                        <img src="@product.Image" alt="@product.Name"/>
-                    </a>
-                    <p>Цена: @product.Price </p>
-                    <p>Категория: @product.Category</p>
-                    <p>@product.Description</p>
-                    <div class="favorite-container">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                        <form asp-controller="Favorite" asp-action="Toggle" method="post">
-                            <input type="hidden" name="productId" value="@product.Id" />
-                            <button type="submit" class="favorite-btn">
-                                ♡
-                            </button>
-                        </form>
-                        }
-                    </div>
+            <div class="product">
+                <h3>@product.Name</h3>
+                <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id" class="product-link">
+                    <img src="@product.Image" alt="@product.Name"/>
+                </a>
+                <p>Цена: @product.Price </p>
+                <p>Категория: @product.Category</p>
+                <p>@product.Description</p>
+                <div class="favorite-container">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <form asp-controller="Favorite" asp-action="Toggle" method="post">
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <button type="submit" class="favorite-btn">
+                            ♡
+                        </button>
+                    </form>
+                    }
                 </div>
+            </div>
             }
         </div>
+        }
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clearSearch');
+        const sortSelect = document.getElementById('sortSelect');
+        const catalogForm = document.getElementById('catalogForm');
+        const hiddenSortBy = document.getElementById('hiddenSortBy');
+        const hiddenSortOrder = document.getElementById('hiddenSortOrder');
+
+        // Показать/скрыть кнопку очистки поиска
+        function toggleClearButton() {
+            if (searchInput.value.trim() !== '') {
+                clearSearch.style.display = 'block';
+            } else {
+                clearSearch.style.display = 'none';
+            }
+        }
+
+        // Инициализация видимости кнопки очистки
+        toggleClearButton();
+
+        // Обработчик ввода в поле поиска (только для показа/скрытия кнопки очистки)
+        searchInput.addEventListener('input', function() {
+            toggleClearButton();
+        });
+
+        // Обработчик кнопки очистки поиска
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            toggleClearButton();
+            catalogForm.submit();
+        });
+
+        // Обработчик изменения сортировки
+        sortSelect.addEventListener('change', function() {
+            const value = this.value;
+            if (value === '') {
+                hiddenSortBy.value = '';
+                hiddenSortOrder.value = 'asc';
+            } else {
+                const parts = value.split('-');
+                hiddenSortBy.value = parts[0];
+                hiddenSortOrder.value = parts[1];
+            }
+            catalogForm.submit();
+        });
+
+        // Обработчик отправки формы (для поиска по Enter и по кнопке лупы)
+        catalogForm.addEventListener('submit', function(e) {
+            // Форма отправляется нормально, без preventDefault
+        });
+    });
+</script>
 </body>
 </html>
