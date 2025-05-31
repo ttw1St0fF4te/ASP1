@@ -22,8 +22,8 @@ ViewData["Title"] = "Cart";
         <div class="cart-item">
             <h3>@item.Product.Name</h3>
             <img src="@item.Product.Image" alt="@item.Product.Name" />
-            <p>Price: @item.Product.Price</p>
-            <p>Quantity: @item.Quantity</p>
+            <p>Цена: @item.Product.Price</p>
+            <p>Кол-во: @item.Quantity</p>
             <p>@item.Product.Description</p>
             <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
                 <input type="hidden" name="cartItemId" value="@item.Id" />

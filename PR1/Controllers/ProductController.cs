@@ -14,7 +14,7 @@ public class ProductController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int id, bool? inCart = false)
     {
         var product = await _context.Products
             .Include(p => p.Reviews)        // Подгружаем отзывы
@@ -25,7 +25,8 @@ public class ProductController : Controller
         {
             return NotFound();
         }
-
+        
+        ViewBag.InCart = inCart ?? false; // Передаем статус в представление
         return View(product);
     }
 }

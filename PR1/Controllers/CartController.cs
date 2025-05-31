@@ -64,7 +64,10 @@ namespace PR1.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Cart");
+            return RedirectToAction("Details", "Product", new { 
+                id = productId, 
+                inCart = true // Передаем флаг добавления
+            });;
         }
 
         public async Task<IActionResult> Index()

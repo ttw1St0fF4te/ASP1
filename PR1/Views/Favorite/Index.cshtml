@@ -1,0 +1,26 @@
+@model List<Favorite>
+
+<h1>Избранное</h1>
+<div class="favorites-list">
+    @if (Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="favorite-item">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
+                    <img src="@item.Product.Image" alt="@item.Product.Name"/>
+                    <h3>@item.Product.Name</h3>
+                </a>
+                <p>Цена: @item.Product.Price</p>
+                <form asp-controller="Favorite" asp-action="Toggle" method="post">
+                    <input type="hidden" name="productId" value="@item.ProductId"/>
+                    <button type="submit" class="delete-favorite">❌</button>
+                </form>
+            </div>
+        }
+    }
+    else
+    {
+    <p>Избранное пусто.</p>
+    }
+</div>

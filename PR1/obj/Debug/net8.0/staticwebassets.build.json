@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "MheUs+5+yBmrf+5HxCuNJIxNFBngjRdJqMGFuuc6im8=",
+  "Hash": "OAILkdpFpii0Jq2oh55Ypm9/THFNUwjeh/1oFj/JeV4=",
   "Source": "PR1",
   "BasePath": "_content/PR1",
   "Mode": "Default",
@@ -224,6 +224,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/css/HomePage.css"
+    },
+    {
+      "Identity": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/ProductDetails.css",
+      "SourceId": "PR1",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/",
+      "BasePath": "_content/PR1",
+      "RelativePath": "css/ProductDetails.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/ProductDetails.css"
     },
     {
       "Identity": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/site.css",

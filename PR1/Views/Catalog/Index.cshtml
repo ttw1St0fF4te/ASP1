@@ -20,18 +20,26 @@ ViewData["Title"] = "Catalog";
         <div class="product-list">
             @foreach (var product in Model)
             {
-            <div class="product">
-                <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id">
+                <div class="product">
                     <h3>@product.Name</h3>
-                </a>
-                <img src="@product.Image" alt="@product.Name" />
-                <p>Price: @product.Price</p>
-                <p>@product.Description</p>
-                <form asp-action="AddToCart" asp-controller="Cart" method="post">
-                    <input type="hidden" name="productId" value="@product.Id" />
-                    <button type="submit">Добавить в корзину</button>
-                </form>
-            </div>
+                    <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id" class="product-link">
+                        <img src="@product.Image" alt="@product.Name"/>
+                    </a>
+                    <p>Цена: @product.Price </p>
+                    <p>Категория: @product.Category</p>
+                    <p>@product.Description</p>
+                    <div class="favorite-container">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                        <form asp-controller="Favorite" asp-action="Toggle" method="post">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="favorite-btn">
+                                ♡
+                            </button>
+                        </form>
+                        }
+                    </div>
+                </div>
             }
         </div>
     </div>
