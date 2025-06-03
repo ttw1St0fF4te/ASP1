@@ -32,6 +32,13 @@ else
 </form>
 }
 
+<h3>Отзывы</h3>
+@if (TempData["Error"] != null)
+{
+<div class="alert alert-danger">
+    @TempData["Error"]
+</div>
+}
 @if (User.Identity.IsAuthenticated)
 {
 @await Html.PartialAsync("_AddReview", new ReviewViewModel { ProductId = Model.Id })
@@ -43,7 +50,6 @@ else
 
 @await Component.InvokeAsync("AverageRating", new { productId = Model.Id })
 <hr />
-<h3>Отзывы</h3>
 @foreach (var review in Model.Reviews)
 {
     @Html.DisplayFor(model => review)

@@ -307,7 +307,7 @@ namespace PR1.Controllers
             sb.AppendLine("<div style='background-color: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin-bottom: 20px;'>");
             sb.AppendLine("<p>Вы запросили смену пароля для вашего аккаунта в MoeShop.</p>");
             sb.AppendLine($"<p><strong>Ваш новый пароль:</strong> <span style='background-color: #f8f9fa; padding: 5px 10px; border-radius: 4px; font-family: monospace; font-size: 16px;'>{newPassword}</span></p>");
-            sb.AppendLine("<p style='color: #dc3545;'><strong>Важно:</strong> Сохраните этот пароль в безопасном месте. Рекомендуем сменить его после входа в систему.</p>");
+            sb.AppendLine("<p style='color: #dc3545;'><strong>Важно:</strong> Сохраните этот пароль в безопасном месте.</p>");
             sb.AppendLine("</div>");
             
             // Футер

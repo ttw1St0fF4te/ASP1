@@ -25,6 +25,7 @@ public class ReviewController : Controller
     {
         if (!ModelState.IsValid)
         {
+            TempData["Error"] = "Минимум 10 символов в отзыве";
             return RedirectToAction("Details", "Product", new { id = model.ProductId });
         }
 

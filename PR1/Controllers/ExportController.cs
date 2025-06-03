@@ -56,11 +56,9 @@ namespace PR1.Controllers
                 {
                     var document = new Document(pdf);
 
-                    // ШАГ 1: Загрузка кириллического шрифта
                     string fontPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Fonts", "times.ttf");
                     PdfFont font = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H);
 
-                    // ШАГ 2: Используем шрифт во всех текстовых элементах
                     // Заголовок
                     document.Add(new Paragraph("Отчет о продажах")
                         .SetTextAlignment(TextAlignment.CENTER)

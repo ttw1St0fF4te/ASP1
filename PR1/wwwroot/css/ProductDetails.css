@@ -18,3 +18,39 @@
 .favorite-btn:hover {
     color: red;
 }
+
+.reviews-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.review-form {
+    margin-bottom: 30px;
+}
+
+.review-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.review-username {
+    font-weight: bold;
+}
+
+.review-rating {
+    color: gold;
+    font-size: 1.2em;
+}
+
+.review-date {
+    color: #888;
+    font-size: 0.9em;
+}

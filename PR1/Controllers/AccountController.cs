@@ -40,6 +40,13 @@ public class AccountController : Controller
                 .Include(u => u.UserRole)
                 .FirstOrDefaultAsync(u => u.Username == model.Username && u.Password == model.Password);
 
+            // Проверка существования пользователя и пароля
+            if (user == null || user.Password != model.Password)
+            {
+                ModelState.AddModelError("Username", "Неверное имя пользователя или пароль");
+                return View(model);
+            }
+            
             if (user != null)
             {
                 var claims = new List<Claim>
@@ -57,7 +64,7 @@ public class AccountController : Controller
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError("Username", "Ошибка входа");
             }
         }
         return View(model);
@@ -76,6 +83,13 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
+            // Проверка уникальности имени пользователя
+            if (await _context.Users.AnyAsync(u => u.Username == model.Username))
+            {
+                ModelState.AddModelError("Username", "Пользователь с таким именем уже существует");
+                return View(model);
+            }
+            
             var user = new User
             {
                 Username = model.Username,
