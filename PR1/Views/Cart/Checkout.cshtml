@@ -1,0 +1,309 @@
+@model PR1.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Оформление заказа";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/Checkout.css" asp-append-version="true"/>
+</head>
+<body>
+    <div class="checkout-container">
+        <h1>Оформление заказа</h1>
+
+        @if (TempData["Error"] != null)
+        {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+        }
+        
+        <!-- Сводка заказа -->
+        <div class="order-summary">
+            <h3>Сводка заказа</h3>
+            @foreach (var item in Model.Cart.CartItems)
+            {
+                <div class="order-item">
+                    <div>
+                        <strong>@item.Product.Name</strong><br>
+                        <small>@item.Product.Price ₽ × @item.Quantity шт.</small>
+                    </div>
+                    <div>
+                        <strong>@((item.Product.Price * item.Quantity).ToString("F2")) ₽</strong>
+                    </div>
+                </div>
+            }
+            <div class="order-item" style="font-size: 18px; font-weight: bold;">
+                <div>Общая сумма:</div>
+                <div>@Model.TotalAmount.ToString("F2") ₽</div>
+            </div>
+            <div style="margin-top: 15px; color: #6c757d;">
+                <small>Дата заказа: @DateTime.Now.ToString("dd.MM.yyyy")</small>
+            </div>
+        </div>
+
+        <form asp-action="PlaceOrder" method="post" id="checkoutForm">
+            @Html.AntiForgeryToken()
+            
+            <!-- Контактные данные -->
+            <div class="form-section">
+                <h3>Контактные данные</h3>
+                
+                <div class="form-group">
+                    <label>Email адрес:</label>
+                    <input type="email" value="@Model.UserEmail" readonly style="background-color: #e9ecef;">
+                    <small style="color: #6c757d;">Email взят из вашего профиля</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="CustomerName">Имя *:</label>
+                    <input type="text" id="CustomerName" name="CustomerName" asp-for="CustomerName" required>
+                    <span asp-validation-for="CustomerName" class="error-message"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="CustomerPhone">Телефон *:</label>
+                    <input type="tel" id="CustomerPhone" name="CustomerPhone" asp-for="CustomerPhone" 
+                           pattern="\+7 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" 
+                           placeholder="+7 (999) 999-99-99" required>
+                    <span asp-validation-for="CustomerPhone" class="error-message"></span>
+                    <small style="color: #6c757d;">Формат: +7 (999) 999-99-99</small>
+                </div>
+            </div>
+
+            <!-- Адрес доставки -->
+            <div class="form-section">
+                <h3>Адрес доставки</h3>
+                
+                <div class="address-row">
+                    <div class="form-group">
+                        <label for="Country">Страна *:</label>
+                        <input type="text" id="Country" name="Country" asp-for="Country" required>
+                        <span asp-validation-for="Country" class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="City">Город *:</label>
+                        <input type="text" id="City" name="City" asp-for="City" required>
+                        <span asp-validation-for="City" class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="PostalCode">Индекс *:</label>
+                        <input type="text" id="PostalCode" name="PostalCode" asp-for="PostalCode" 
+                               pattern="[0-9]{6}" placeholder="123456" required>
+                        <span asp-validation-for="PostalCode" class="error-message"></span>
+                    </div>
+                </div>
+                
+                <div class="address-row">
+                    <div class="form-group">
+                        <label for="Street">Улица *:</label>
+                        <input type="text" id="Street" name="Street" asp-for="Street" required>
+                        <span asp-validation-for="Street" class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="HouseNumber">Дом *:</label>
+                        <input type="text" id="HouseNumber" name="HouseNumber" asp-for="HouseNumber" required>
+                        <span asp-validation-for="HouseNumber" class="error-message"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Виртуальный кошелек -->
+            <div class="form-section @(Model.CanUseWallet ? "wallet-section" : "")">
+                <h3>Виртуальный кошелек</h3>
+                
+                @if (Model.CanUseWallet)
+                {
+                    <div class="loyalty-info">
+                        <strong>Ваш уровень лояльности: @Model.LoyaltyLevel</strong><br>
+                        Баланс кошелька: <strong>@Model.WalletBalance?.ToString("F2") ₽</strong><br>
+                        Возможное начисление: <strong>@Model.PotentialEarnings?.ToString("F2") ₽</strong>
+                    </div>
+                    
+                    <div class="wallet-choice">
+                        <div class="wallet-option" onclick="selectWalletOption(false)">
+                            <input type="radio" id="earn" name="UseWallet" value="false" checked>
+                            <label for="earn">
+                                <strong>Копить средства</strong><br>
+                                <small>Начислить @Model.PotentialEarnings?.ToString("F2") ₽ на кошелек</small>
+                            </label>
+                        </div>
+                        
+                        <div class="wallet-option" onclick="selectWalletOption(true)">
+                            <input type="radio" id="spend" name="UseWallet" value="true">
+                            <label for="spend">
+                                <strong>Списать средства</strong><br>
+                                <small>Использовать @Model.WalletBalance?.ToString("F2") ₽ с кошелька</small>
+                            </label>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="no-wallet-message">
+                        Виртуальный кошелек станет доступен при достижении Базового уровня лояльности (сумма покупок от 30 000 ₽)
+                    </div>
+                    <input type="hidden" name="UseWallet" value="false">
+                }
+            </div>
+
+            <!-- Итоговая сумма -->
+            <div class="total-section">
+                <div class="total-line">
+                    <span>Сумма заказа:</span>
+                    <span>@Model.TotalAmount.ToString("F2") ₽</span>
+                </div>
+                <!-- Строка для списания с кошелька -->
+                <div class="total-line" id="walletDeductionLine" style="display: none; color: #dc3545;">
+                    <span>Списано с кошелька:</span>
+                    <span>-<span id="walletDeductionAmount">0.00</span></span>
+                </div>
+                <!-- Строка для начисления на кошелек -->
+                <div class="total-line" id="walletEarningsLine" style="display: none; color: #28a745;">
+                    <span>Будет начислено на кошелек:</span>
+                    <span>+<span id="walletEarningsAmount">0.00</span></span>
+                </div>
+                <div class="total-line final">
+                    <span>К оплате:</span>
+                    <span id="finalAmount">@Model.TotalAmount.ToString("F2") ₽</span>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-button" id="submitButton">
+                Купить
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function selectWalletOption(useWallet) {
+            document.querySelectorAll('.wallet-option').forEach(opt => opt.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            if (useWallet) {
+                document.getElementById('spend').checked = true;
+            } else {
+                document.getElementById('earn').checked = true;
+            }
+
+            updateTotals();
+        }
+
+        function updateTotals() {
+            const useWallet = document.getElementById('spend') && document.getElementById('spend').checked;
+
+            // Получаем токен для защиты от CSRF
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            const token = tokenInput ? tokenInput.value : '';
+
+            const formData = new FormData();
+            formData.append('useWallet', useWallet);
+            formData.append('__RequestVerificationToken', token);
+
+            fetch('/Cart/CalculateTotal', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const walletDeductionLine = document.getElementById('walletDeductionLine');
+                        const walletEarningsLine = document.getElementById('walletEarningsLine');
+                        const walletDeductionAmount = document.getElementById('walletDeductionAmount');
+                        const walletEarningsAmount = document.getElementById('walletEarningsAmount');
+                        const finalAmount = document.getElementById('finalAmount');
+
+                        if (useWallet && data.walletDeduction > 0) {
+                            walletDeductionLine.style.display = 'flex';
+                            walletEarningsLine.style.display = 'none';
+                            walletDeductionAmount.textContent = data.walletDeduction.toFixed(2) + ' ₽';
+                            finalAmount.textContent = data.finalAmount.toFixed(2) + ' ₽';
+                        } else {
+                            walletDeductionLine.style.display = 'none';
+                            if (data.walletEarnings > 0) {
+                                walletEarningsLine.style.display = 'flex';
+                                walletEarningsAmount.textContent = data.walletEarnings.toFixed(2) + ' ₽';
+                            } else {
+                                walletEarningsLine.style.display = 'none';
+                            }
+                            finalAmount.textContent = data.finalAmount.toFixed(2) + ' ₽';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Форматирование номера телефона
+        document.getElementById('CustomerPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.startsWith('7')) {
+                value = value.substring(1);
+            }
+            if (value.startsWith('8')) {
+                value = value.substring(1);
+            }
+
+            if (value.length >= 10) {
+                value = value.substring(0, 10);
+                const formatted = `+7 (${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6, 8)}-${value.substring(8, 10)}`;
+                e.target.value = formatted;
+            } else if (value.length > 0) {
+                e.target.value = '+7 ' + value;
+            }
+        });
+
+        // Валидация формы
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            const requiredFields = this.querySelectorAll('input[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#dc3545';
+                } else {
+                    field.style.borderColor = '#ced4da';
+                }
+            });
+
+            const phone = document.getElementById('CustomerPhone').value;
+            const phonePattern = /^\+7 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/;
+            if (!phonePattern.test(phone)) {
+                isValid = false;
+                document.getElementById('CustomerPhone').style.borderColor = '#dc3545';
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Пожалуйста, заполните все обязательные поля корректно');
+                return false;
+            }
+
+            // Блокируем кнопку отправки для предотвращения двойной отправки
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Обработка...';
+
+            return true;
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('earn') && document.getElementById('earn').checked) {
+                document.querySelector('.wallet-option:first-child').classList.add('selected');
+            }
+            // Инициализируем расчет итоговых сумм
+            updateTotals();
+        });
+    </script>
+</body>
+</html>

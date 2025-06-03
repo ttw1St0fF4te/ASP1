@@ -53,9 +53,7 @@ ViewData["Title"] = "Cart";
         <h3 id="cart-total">Общая сумма: @(Model.CartItems.Sum(ci => ci.Quantity * ci.Product.Price).ToString("F2")) руб.</h3>
     </div>
 
-    <form asp-action="PlaceOrder" asp-controller="Cart" method="post">
-        <button type="submit">Купить</button>
-    </form>
+    <a asp-action="Checkout" asp-controller="Cart" class="checkout-btn">Перейти к оформлению</a>
     }
     else
     {

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PR1.Data;
+using PR1.Models;
+using PR1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout"; // Устанавливаем путь для выхода
     });
+
+// Конфигурация email настроек
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
+// Регистрация email сервиса
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Регистрация IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();

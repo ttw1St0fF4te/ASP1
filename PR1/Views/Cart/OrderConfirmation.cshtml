@@ -1,0 +1,102 @@
+@model PR1.Models.Order
+
+@{
+    ViewData["Title"] = "Заказ оформлен";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/OrderConfirmation.css" asp-append-version="true"/>
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="success-icon">✅</div>
+        <h1>Заказ успешно оформлен!</h1>
+        <p style="font-size: 18px; color: #6c757d;">Спасибо за покупку! На указанный email отправлено подтверждение заказа.</p>
+        
+        <div class="order-details">
+            <div class="order-header">
+                <div>
+                    <h3>Заказ #@Model.Id</h3>
+                    <p style="color: #6c757d; margin: 0;">@Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                </div>
+                <div style="text-align: right;">
+                    <h4 style="color: #28a745; margin: 0;">К оплате: @Model.FinalAmount.ToString("F2") ₽</h4>
+                </div>
+            </div>
+            
+            <div class="order-items">
+                <h4>Товары в заказе:</h4>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <div class="order-item">
+                        <div>
+                            <strong>@item.Product.Name</strong><br>
+                            <small>@item.PriceAtOrder.ToString("F2") ₽ × @item.Quantity шт.</small>
+                        </div>
+                        <div>
+                            <strong>@((item.PriceAtOrder * item.Quantity).ToString("F2")) ₽</strong>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 20px;">
+            <div class="contact-info info-section" style="flex: 1;">
+                <h4>Контактные данные</h4>
+                <p><strong>Имя:</strong> @Model.CustomerName</p>
+                <p><strong>Телефон:</strong> @Model.CustomerPhone</p>
+                <p><strong>Email:</strong> @Model.User.Email</p>
+            </div>
+            
+            <div class="delivery-info info-section" style="flex: 1;">
+                <h4>Адрес доставки</h4>
+                <p>@Model.DeliveryAddress</p>
+            </div>
+        </div>
+        
+        <div class="payment-summary">
+            <h4>Сводка по оплате</h4>
+            <div class="summary-line">
+                <span>Общая сумма заказа:</span>
+                <span>@Model.TotalAmount.ToString("F2") ₽</span>
+            </div>
+            
+            @if (Model.WalletUsed.HasValue && Model.WalletUsed > 0)
+            {
+                <div class="summary-line">
+                    <span>Списано с виртуального кошелька:</span>
+                    <span style="color: #dc3545;">-@Model.WalletUsed.Value.ToString("F2") ₽</span>
+                </div>
+                
+                <div class="wallet-info">
+                    <strong>💰 Использован виртуальный кошелек</strong><br>
+                    Со счета списано @Model.WalletUsed.Value.ToString("F2") ₽
+                </div>
+            }
+            
+            @if (Model.WalletEarned.HasValue && Model.WalletEarned > 0)
+            {
+                <div class="wallet-info">
+                    <strong>🎉 Начислено на виртуальный кошелек</strong><br>
+                    На ваш счет начислено @Model.WalletEarned.Value.ToString("F2") ₽ 
+                    (@(((Model.WalletEarned.Value / Model.TotalAmount) * 100).ToString("F0"))% кешбэк)
+                </div>
+            }
+            
+            <div class="summary-line total">
+                <span>Итого к оплате:</span>
+                <span>@Model.FinalAmount.ToString("F2") ₽</span>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Продолжить покупки</a>
+        </div>
+    </div>
+</body>
+</html>
