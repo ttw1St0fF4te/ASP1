@@ -10,6 +10,10 @@ using PR1.Models;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using Microsoft.AspNetCore.Hosting; // Добавьте этот namespace
+
 
 namespace PR1.Controllers
 {
@@ -17,10 +21,12 @@ namespace PR1.Controllers
     public class ExportController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _hostingEnvironment; // Для доступа к файлам
 
-        public ExportController(AppDbContext context)
+        public ExportController(AppDbContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<IActionResult> ExportSalesReport()
@@ -50,38 +56,48 @@ namespace PR1.Controllers
                 {
                     var document = new Document(pdf);
 
-                    // Adding the title
-                    document.Add(new Paragraph("Sales Report")
+                    // ШАГ 1: Загрузка кириллического шрифта
+                    string fontPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Fonts", "times.ttf");
+                    PdfFont font = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H);
+
+                    // ШАГ 2: Используем шрифт во всех текстовых элементах
+                    // Заголовок
+                    document.Add(new Paragraph("Отчет о продажах")
                         .SetTextAlignment(TextAlignment.CENTER)
-                        .SetFontSize(20));
+                        .SetFontSize(20)
+                        .SetFont(font)); // Устанавливаем шрифт
 
-                    // Adding the total sales
-                    document.Add(new Paragraph($"Total Sales: {viewModel.TotalSales}")
-                        .SetTextAlignment(TextAlignment.LEFT)
-                        .SetFontSize(12));
-
-                    // Adding explanatory text
-                    document.Add(new Paragraph("This report provides information about product sales. The table below contains data on the number of units sold for each product.")
+                    // Общие продажи
+                    document.Add(new Paragraph($"Всего продано: {viewModel.TotalSales}")
                         .SetTextAlignment(TextAlignment.LEFT)
                         .SetFontSize(12)
-                        .SetMarginBottom(20));
+                        .SetFont(font)); // Устанавливаем шрифт
 
-                    // Creating the table
+                    // Описание
+                    document.Add(new Paragraph("Этот отчет содержит информацию о продажах товаров. В таблице ниже представлены данные о количестве проданных единиц по каждому товару.")
+                        .SetTextAlignment(TextAlignment.LEFT)
+                        .SetFontSize(12)
+                        .SetMarginBottom(20)
+                        .SetFont(font)); // Устанавливаем шрифт
+
+                    // Таблица
                     var table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
-                    table.AddHeaderCell(new Cell().Add(new Paragraph("Product")));
-                    table.AddHeaderCell(new Cell().Add(new Paragraph("Quantity")));
+                    
+                    // Заголовки таблицы
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Товар").SetFont(font)));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Количество").SetFont(font)));
 
+                    // Данные таблицы
                     foreach (var ps in viewModel.ProductSales)
                     {
-                        table.AddCell(new Cell().Add(new Paragraph(ps.ProductName)));
-                        table.AddCell(new Cell().Add(new Paragraph(ps.TotalQuantity.ToString())));
+                        table.AddCell(new Cell().Add(new Paragraph(ps.ProductName).SetFont(font)));
+                        table.AddCell(new Cell().Add(new Paragraph(ps.TotalQuantity.ToString()).SetFont(font)));
                     }
 
-                    // Adding the table to the document
                     document.Add(table);
                 }
 
-                return File(memoryStream.ToArray(), "application/pdf", "SalesReport.pdf");
+                return File(memoryStream.ToArray(), "application/pdf", "Отчет о продажах.pdf");
             }
         }
     }

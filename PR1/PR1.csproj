@@ -20,4 +20,11 @@
       <PackageReference Include="Svg" Version="3.4.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Fonts\times.ttf" />
+      <Content Include="Fonts\times.ttf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
