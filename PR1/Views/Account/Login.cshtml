@@ -18,6 +18,11 @@ ViewData["Title"] = "Login";
             <input asp-for="Password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
+        <div class="text-center mt-3">
+            <a href="@Url.Action("ForgotPassword")" class="text-decoration-none">
+                Забыли пароль?
+            </a>
+        </div>
         <button type="submit" class="btn btn-primary">Войти</button>
     </form>
 </div>

@@ -1,0 +1,65 @@
+<!-- Views/Profile/OrderHistory.cshtml -->
+@model List<PR1.Models.Order>
+
+@{
+    ViewData["Title"] = "История заказов";
+}
+
+<div class="container mt-4">
+    <h2>История заказов</h2>
+    
+    <!-- Навигация по вкладкам -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index")">Контактные данные</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("OrderHistory")">История заказов</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("LoyaltyProgram")">Программа лояльности</a>
+        </li>
+        @if (ViewBag.HasWallet == true)
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Wallet")">Виртуальный кошелёк</a>
+            </li>
+        }
+    </ul>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Номер заказа</th>
+                        <th>Дата оформления</th>
+                        <th>Общая сумма</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("OrderDetails", new { id = order.Id })" class="text-decoration-none">
+                                    #@order.Id
+                                </a>
+                            </td>
+                            <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@order.TotalAmount.ToString("F2") ₽</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h5>У вас пока нет заказов</h5>
+            <p>Перейдите в <a href="@Url.Action("Index", "Home")">каталог товаров</a> и сделайте свой первый заказ!</p>
+        </div>
+    }
+</div>

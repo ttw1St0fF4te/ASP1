@@ -1,0 +1,92 @@
+<!-- Views/Profile/Index.cshtml -->
+@model PR1.Models.User
+
+@{
+    ViewData["Title"] = "Профиль пользователя";
+}
+
+<div class="container mt-4">
+    <h2>Профиль пользователя</h2>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Навигация по вкладкам -->
+    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab">
+                Контактные данные
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="@Url.Action("OrderHistory")">История заказов</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="@Url.Action("LoyaltyProgram")">Программа лояльности</a>
+        </li>
+        @if (Model.TotalSpent >= 30000)
+        {
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="@Url.Action("Wallet")">Виртуальный кошелёк</a>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content mt-3" id="profileTabsContent">
+        <div class="tab-pane fade show active" id="contact" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Контактные данные</h5>
+                    
+                    <form asp-action="UpdateContactData" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Имя пользователя</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   value="@Model.Username" maxlength="20" required>
+                            <div class="form-text">Максимум 20 символов, только буквы и цифры</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="@Model.Email" placeholder="example@mail.com">
+                            <div class="form-text">Необязательно, но требуется для смены пароля и оформления заказа</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </form>
+                    
+                    <hr>
+                    
+                    <h6>Смена пароля</h6>
+                    <p class="text-muted">Новый пароль будет отправлен на ваш email</p>
+                    
+                    <form asp-action="ResetPassword" method="post" onsubmit="return confirm('Вы уверены? После смены пароля вам потребуется войти заново.');">
+                        <button type="submit" class="btn btn-warning" @(string.IsNullOrWhiteSpace(Model.Email) ? "disabled" : "")>
+                            Сменить пароль
+                        </button>
+                        @if (string.IsNullOrWhiteSpace(Model.Email))
+                        {
+                            <div class="form-text text-danger">Сначала укажите email адрес</div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

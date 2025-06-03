@@ -1,0 +1,102 @@
+<!-- Views/Profile/OrderDetails.cshtml -->
+@model PR1.Models.Order
+
+@{
+    ViewData["Title"] = $"Заказ #{Model.Id}";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Заказ #@Model.Id</h2>
+        <a href="@Url.Action("OrderHistory")" class="btn btn-secondary">Назад к истории заказов</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Информация о заказе -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Информация о заказе</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p><strong>Дата заказа:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                            <p><strong>Статус:</strong> <span class="badge bg-success">Оформлен</span></p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p><strong>Общая сумма:</strong> @Model.TotalAmount.ToString("F2") ₽</p>
+                            <p><strong>К оплате:</strong> <strong>@Model.FinalAmount.ToString("F2") ₽</strong></p>
+                        </div>
+                    </div>
+                    
+                    @if (Model.WalletUsed.HasValue && Model.WalletUsed > 0)
+                    {
+                        <p><strong>Списано с кошелька:</strong> <span class="text-danger">@Model.WalletUsed.Value.ToString("F2") ₽</span></p>
+                    }
+                    
+                    @if (Model.WalletEarned.HasValue && Model.WalletEarned > 0)
+                    {
+                        <p><strong>Начислено на кошелек:</strong> <span class="text-success">+@Model.WalletEarned.Value.ToString("F2") ₽</span></p>
+                    }
+                </div>
+            </div>
+
+            <!-- Товары в заказе -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Товары в заказе</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>Количество</th>
+                                    <th>Цена</th>
+                                    <th>Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>@item.Product.Name</td>
+                                        <td>@item.Quantity шт.</td>
+                                        <td>@item.PriceAtOrder.ToString("F2") ₽</td>
+                                        <td><strong>@((item.Quantity * item.PriceAtOrder).ToString("F2")) ₽</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Контактные данные -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Контактные данные</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Имя:</strong> @(Model.CustomerName ?? "Не указано")</p>
+                    <p><strong>Телефон:</strong> @(Model.CustomerPhone ?? "Не указан")</p>
+                    <p><strong>Email:</strong> @(Model.User.Email ?? "Не указан")</p>
+                </div>
+            </div>
+
+            <!-- Адрес доставки -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Адрес доставки</h5>
+                </div>
+                <div class="card-body">
+                    <p>@(Model.DeliveryAddress ?? "Не указан")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

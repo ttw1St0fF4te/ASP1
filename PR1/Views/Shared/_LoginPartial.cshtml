@@ -30,7 +30,7 @@ var user = context.User;
         <a asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
     </li>
     <li>
-        <span>@user.Identity.Name</span>
+        <a href="@Url.Action("Index", "Profile")">@user.Identity.Name</a>
     </li>
 </ul>
 }

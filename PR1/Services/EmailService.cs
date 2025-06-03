@@ -53,6 +53,42 @@ public class EmailService : IEmailService
             // throw; // Раскомментируйте, если хотите прокинуть исключение выше
         }
     }
+    
+    public async Task SendPasswordResetAsync(string toEmail, string emailBody)
+    {
+        try
+        {
+            using var smtpClient = new SmtpClient(_emailSettings.SmtpServer)
+            {
+                Port = _emailSettings.Port,
+                Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
+                EnableSsl = _emailSettings.EnableSsl,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
+            };
+
+            using var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName),
+                Subject = "Смена пароля - MoeShop",
+                Body = emailBody,
+                IsBodyHtml = true,
+            };
+
+            mailMessage.To.Add(toEmail);
+        
+            _logger.LogInformation($"Отправка email смены пароля на {toEmail}");
+        
+            await smtpClient.SendMailAsync(mailMessage);
+        
+            _logger.LogInformation($"Email смены пароля успешно отправлен на {toEmail}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Ошибка отправки email смены пароля на {toEmail}: {ex.Message}");
+            throw;
+        }
+    }
 
     private string GenerateEmailBody(Order order)
     {

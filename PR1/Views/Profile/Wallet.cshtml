@@ -1,0 +1,93 @@
+<!-- Views/Profile/Wallet.cshtml -->
+@model PR1.Controllers.WalletViewModel
+
+@{
+    ViewData["Title"] = "Виртуальный кошелёк";
+}
+
+<div class="container mt-4">
+    <h2>Виртуальный кошелёк</h2>
+    
+    <!-- Навигация по вкладкам -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index")">Контактные данные</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("OrderHistory")">История заказов</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("LoyaltyProgram")">Программа лояльности</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("Wallet")">Виртуальный кошелёк</a>
+        </li>
+    </ul>
+
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Баланс кошелька -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Текущий баланс</h3>
+                    <h1 class="text-success">@Model.Balance.ToString("F2") ₽</h1>
+                    <p class="text-muted">Доступно для списания при заказе</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Информация о кэшбеке -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Ваш уровень кэшбека</h5>
+                    <p><strong>Текущий уровень:</strong> @Model.CurrentLevel</p>
+                    
+                    @{
+                        var cashbackPercent = Model.CurrentLevel switch
+                        {
+                            "Базовый" => 5,
+                            "Серебряный" => 10,
+                            "Золотой" => 15,
+                            _ => 0
+                        };
+                    }
+                    
+                    <p><strong>Кэшбек:</strong> @cashbackPercent%</p>
+                    <hr>
+                    <small class="text-muted">
+                        Кэшбек начисляется автоматически при оформлении заказа, 
+                        если выбрана опция "Копить средства на кошелек"
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Как использовать кошелек -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Как использовать виртуальный кошелёк</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Накопление средств</h6>
+                    <ul>
+                        <li>При оформлении заказа выберите "Копить средства"</li>
+                        <li>На кошелек начислится кэшбек согласно вашему уровню</li>
+                        <li>Средства доступны для использования сразу после оформления заказа</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Списание средств</h6>
+                    <ul>
+                        <li>При оформлении заказа выберите "Списать с кошелька"</li>
+                        <li>Вся доступная сумма будет списана автоматически</li>
+                        <li>Итоговая сумма заказа уменьшится на размер списания</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

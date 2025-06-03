@@ -1,0 +1,101 @@
+<!-- Views/Profile/LoyaltyProgram.cshtml -->
+@model PR1.Controllers.LoyaltyProgramViewModel
+
+@{
+    ViewData["Title"] = "Программа лояльности";
+}
+
+<div class="container mt-4">
+    <h2>Программа лояльности</h2>
+    
+    <!-- Навигация по вкладкам -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index")">Контактные данные</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("OrderHistory")">История заказов</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("LoyaltyProgram")">Программа лояльности</a>
+        </li>
+        @if (Model.CurrentLevel != "Нет уровня")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Wallet")">Виртуальный кошелёк</a>
+            </li>
+        }
+    </ul>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Текущий статус -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Ваш текущий уровень</h3>
+                    @{
+                        var levelClass = Model.CurrentLevel switch
+                        {
+                            "Базовый" => "text-success",
+                            "Серебряный" => "text-info",
+                            "Золотой" => "text-warning",
+                            _ => "text-muted"
+                        };
+                    }
+                    <h1 class="@levelClass">@Model.CurrentLevel</h1>
+                    
+                    @if (Model.CurrentLevel != "Нет уровня")
+                    {
+                        <p class="lead">Кэшбек: <strong>@Model.CashbackPercent%</strong></p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Совершите покупки на сумму от 30 000 ₽ для получения уровня</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Прогресс -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Ваша статистика</h5>
+                    <p><strong>Общая сумма покупок:</strong> @Model.TotalSpent.ToString("F2") ₽</p>
+                    <p><strong>Прогресс:</strong> @Model.ProgressToNext</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Информация об уровнях -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Уровни лояльности</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-success">Базовый уровень</h6>
+                        <p class="small mb-1">От 30 000 ₽</p>
+                        <p class="small">Кэшбек 5%</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-info">Серебряный уровень</h6>
+                        <p class="small mb-1">От 60 000 ₽</p>
+                        <p class="small">Кэшбек 10%</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-warning">Золотой уровень</h6>
+                        <p class="small mb-1">От 120 000 ₽</p>
+                        <p class="small">Кэшбек 15%</p>
+                    </div>
+                    
+                    <hr>
+                    <small class="text-muted">
+                        Кэшбек начисляется на виртуальный кошелек при оформлении заказа
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
