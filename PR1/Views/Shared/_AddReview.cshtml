@@ -1,21 +1,60 @@
 @model ReviewViewModel
 
-<form asp-controller="Review" asp-action="Create" method="post">
+<form asp-controller="Review" asp-action="Create" method="post" class="review-form">
     <input type="hidden" asp-for="ProductId" />
-
-    <label>Оценка:</label>
-    <select asp-for="Rating">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-
-    <br />
     
-    <textarea asp-for="Text" placeholder="Текст отзыва"></textarea>
-    <br />
+    <div class="rating-field">
+        <label class="rating-label">Оценка товара:</label>
+        <div class="star-rating">
+            <input type="radio" id="star5" asp-for="Rating" value="5" required />
+            <label for="star5" title="5 звёзд">★</label>
+            
+            <input type="radio" id="star4" asp-for="Rating" value="4" />
+            <label for="star4" title="4 звезды">★</label>
+            
+            <input type="radio" id="star3" asp-for="Rating" value="3" />
+            <label for="star3" title="3 звезды">★</label>
+            
+            <input type="radio" id="star2" asp-for="Rating" value="2" />
+            <label for="star2" title="2 звезды">★</label>
+            
+            <input type="radio" id="star1" asp-for="Rating" value="1" />
+            <label for="star1" title="1 звезда">★</label>
+        </div>
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+    
+    <div class="review-field">
+        <textarea asp-for="Text" 
+                  placeholder="Расскажите о ваших впечатлениях..."
+                  rows="4"
+                  maxlength="500"
+                  required></textarea>
+        <div class="char-counter">
+            <span id="charCount">0</span>/500
+        </div>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
 
-    <button type="submit">Отправить отзыв</button>
+    <button type="submit" class="review-submit">
+        <span>Отправить отзыв</span>
+    </button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.querySelector('[asp-for="Text"]');
+    const charCount = document.getElementById('charCount');
+    
+    textarea.addEventListener('input', function() {
+        const length = this.value.length;
+        charCount.textContent = length;
+        
+        if (length > 450) {
+            charCount.classList.add('warning');
+        } else {
+            charCount.classList.remove('warning');
+        }
+    });
+});
+</script>

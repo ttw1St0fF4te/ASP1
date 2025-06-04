@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets/css/Account.css"
     },
     {
+      "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/Admin.css",
+      "PackagePath": "staticwebassets/css/Admin.css"
+    },
+    {
       "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/CartPage.css",
       "PackagePath": "staticwebassets/css/CartPage.css"
     },
@@ -31,6 +35,10 @@
     {
       "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/Checkout.css",
       "PackagePath": "staticwebassets/css/Checkout.css"
+    },
+    {
+      "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/FavoritePage.css",
+      "PackagePath": "staticwebassets/css/FavoritePage.css"
     },
     {
       "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/Footer.css",
@@ -45,16 +53,16 @@
       "PackagePath": "staticwebassets/css/HomePage.css"
     },
     {
+      "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/ManageGraphics.css",
+      "PackagePath": "staticwebassets/css/ManageGraphics.css"
+    },
+    {
       "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/OrderConfirmation.css",
       "PackagePath": "staticwebassets/css/OrderConfirmation.css"
     },
     {
       "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/ProductDetails.css",
       "PackagePath": "staticwebassets/css/ProductDetails.css"
-    },
-    {
-      "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/admin.css",
-      "PackagePath": "staticwebassets/css/admin.css"
     },
     {
       "Id": "/Users/keluch/Desktop/coledj/5sem/ASP/PR1/PR1/wwwroot/css/site.css",

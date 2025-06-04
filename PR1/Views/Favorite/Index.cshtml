@@ -1,26 +1,55 @@
 @model List<Favorite>
 
-<h1>Избранное</h1>
-<div class="favorites-list">
+<link rel="stylesheet" href="~/css/FavoritePage.css" asp-append-version="true"/>
+
+<div class="favorite-page">
+    <div class="favorite-header">
+        <h1>Избранное</h1>
+    </div>
+
     @if (Model.Any())
     {
-        @foreach (var item in Model)
-        {
-            <div class="favorite-item">
-                <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
-                    <img src="@item.Product.Image" alt="@item.Product.Name"/>
-                    <h3>@item.Product.Name</h3>
-                </a>
-                <p>Цена: @item.Product.Price</p>
-                <form asp-controller="Favorite" asp-action="Toggle" method="post">
-                    <input type="hidden" name="productId" value="@item.ProductId"/>
-                    <button type="submit" class="delete-favorite">❌</button>
-                </form>
-            </div>
-        }
+        <div class="favorites-grid">
+            @foreach (var item in Model)
+            {
+                <div class="favorite-item">
+                    <div class="favorite-item-image">
+                        <img src="@item.Product.Image" alt="@item.Product.Name"/>
+                        <form asp-controller="Favorite" asp-action="Toggle" method="post" class="remove-favorite-form">
+                            <input type="hidden" name="productId" value="@item.ProductId"/>
+                            <button type="submit" class="remove-favorite" title="Удалить из избранного">
+                                <span>❤</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="favorite-item-details">
+                        <h3 class="favorite-item-title">
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
+                                @item.Product.Name
+                            </a>
+                        </h3>
+                        <p class="favorite-item-description">@item.Product.Description</p>
+                        <div class="favorite-item-footer">
+                            <div class="favorite-item-price">@item.Product.Price.ToString("F2") ₽</div>
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" 
+                               class="view-details-btn">
+                                Подробнее
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
     else
     {
-    <p>Избранное пусто.</p>
+        <div class="empty-favorites">
+            <div class="empty-favorites-icon">♡</div>
+            <p>В избранном пока ничего нет</p>
+            <a asp-controller="Catalog" asp-action="Index" class="browse-catalog-btn">
+                Перейти в каталог
+            </a>
+        </div>
     }
 </div>

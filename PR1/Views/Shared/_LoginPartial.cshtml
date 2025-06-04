@@ -22,7 +22,7 @@ var user = context.User;
             <a asp-area="" asp-controller="Admin" asp-action="Index">Панель администратора</a>
         </li>
     }
-    else
+    @if (user.IsInRole("user"))
     {
         <li>
             <a asp-area="" asp-controller="Cart" asp-action="Index">Корзина</a>
@@ -34,7 +34,6 @@ var user = context.User;
             <a href="@Url.Action("Index", "Profile")">@user.Identity.Name</a>
         </li>
     }
-    
     <li>
         <a asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
     </li>

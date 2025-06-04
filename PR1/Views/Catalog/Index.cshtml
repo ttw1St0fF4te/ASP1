@@ -1,27 +1,19 @@
 @model IEnumerable<Product>
 
 @{
-ViewData["Title"] = "Catalog";
+    ViewData["Title"] = "Каталог";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/animations/fade-in.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/css/CatalogPage.css" asp-append-version="true"/>
-</head>
-<body>
-<!-- CatalogPage -->
+<link rel="stylesheet" href="~/animations/fade-in.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/CatalogPage.css" asp-append-version="true"/>
+
 <div class="fade-in">
     <div class="catalog-page">
-        <h1>Каталог</h1>
+        <div class="catalog-header">
 
-        <!-- Элементы управления поиском и сортировкой -->
-        <div class="catalog-controls">
-            <form method="get" action="@Url.Action("Index", "Catalog")" id="catalogForm">
-                <div class="search-container">
+            <!-- Элементы управления поиском и сортировкой -->
+            <div class="catalog-controls">
+                <form method="get" action="@Url.Action("Index", "Catalog")" id="catalogForm" class="search-container">
                     <button type="submit" class="search-btn">🔍</button>
                     <input type="text"
                            name="searchTerm"
@@ -30,60 +22,62 @@ ViewData["Title"] = "Catalog";
                            class="search-input"
                            id="searchInput" />
                     <button type="button" class="clear-search" id="clearSearch">✕</button>
+                    
+                    <input type="hidden" name="sortBy" value="@ViewBag.SortBy" id="hiddenSortBy" />
+                    <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" id="hiddenSortOrder" />
+                </form>
+
+                <div class="sort-container">
+                    <select class="sort-select" id="sortSelect">
+                        <option value="">По умолчанию</option>
+                        <option value="price-asc" selected="@(ViewBag.SortBy == "price" && ViewBag.SortOrder == "asc")">По возрастанию цены</option>
+                        <option value="price-desc" selected="@(ViewBag.SortBy == "price" && ViewBag.SortOrder == "desc")">По убыванию цены</option>
+                        <option value="name-asc" selected="@(ViewBag.SortBy == "name" && ViewBag.SortOrder == "asc")">По названию А-Я</option>
+                        <option value="name-desc" selected="@(ViewBag.SortBy == "name" && ViewBag.SortOrder == "desc")">По названию Я-А</option>
+                        <option value="date-desc" selected="@(ViewBag.SortBy == "date" && ViewBag.SortOrder == "desc")">Сначала новые</option>
+                        <option value="date-asc" selected="@(ViewBag.SortBy == "date" && ViewBag.SortOrder == "asc")">Сначала старые</option>
+                    </select>
                 </div>
-
-                <input type="hidden" name="sortBy" value="@ViewBag.SortBy" id="hiddenSortBy" />
-                <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" id="hiddenSortOrder" />
-            </form>
-
-            <div class="sort-container">
-                <label>Сортировка:</label>
-                <select class="sort-select" id="sortSelect">
-                    <option value="">По умолчанию</option>
-                    <option value="price-asc" selected="@(ViewBag.SortBy == "price" && ViewBag.SortOrder == "asc")">Цена: по возрастанию</option>
-                    <option value="price-desc" selected="@(ViewBag.SortBy == "price" && ViewBag.SortOrder == "desc")">Цена: по убыванию</option>
-                    <option value="date-desc" selected="@(ViewBag.SortBy == "date" && ViewBag.SortOrder == "desc")">Дата: новые сначала</option>
-                    <option value="date-asc" selected="@(ViewBag.SortBy == "date" && ViewBag.SortOrder == "asc")">Дата: старые сначала</option>
-                    <option value="name-asc" selected="@(ViewBag.SortBy == "name" && ViewBag.SortOrder == "asc")">Название: А-Я</option>
-                    <option value="name-desc" selected="@(ViewBag.SortBy == "name" && ViewBag.SortOrder == "desc")">Название: Я-А</option>
-                </select>
             </div>
         </div>
 
         <!-- Результаты поиска -->
         @if (ViewBag.IsSearching && !ViewBag.HasResults)
         {
-        <div class="no-results">
-            <p>Схожих результатов нет</p>
-        </div>
+            <div class="no-results">
+                <p>По вашему запросу ничего не найдено</p>
+                <p>Попробуйте изменить параметры поиска</p>
+            </div>
         }
         else
         {
-        <div class="product-list">
-            @foreach (var product in Model)
-            {
-            <div class="product">
-                <h3>@product.Name</h3>
-                <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id" class="product-link">
-                    <img src="@product.Image" alt="@product.Name"/>
-                </a>
-                <p>Цена: @product.Price </p>
-                <p>Категория: @product.Category</p>
-                <p>@product.Description</p>
-                <div class="favorite-container">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                    <form asp-controller="Favorite" asp-action="Toggle" method="post">
-                        <input type="hidden" name="productId" value="@product.Id" />
-                        <button type="submit" class="favorite-btn">
-                            ♡
-                        </button>
-                    </form>
-                    }
-                </div>
+            <div class="product-list">
+                @foreach (var product in Model)
+                {
+                    <div class="product">
+                        <div class="favorite-container">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form asp-controller="Favorite" asp-action="Toggle" method="post">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button type="submit" class="favorite-btn">
+                                        ♡
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                        
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@product.Id" class="product-link">
+                            <img src="@product.Image" alt="@product.Name"/>
+                        </a>
+                        
+                        <h3>@product.Name</h3>
+                        <p class="product-price">@product.Price ₽</p>
+                        <p class="product-category">@product.Category</p>
+                        <p class="product-description">@product.Description</p>
+                    </div>
+                }
             </div>
-            }
-        </div>
         }
     </div>
 </div>
@@ -96,8 +90,29 @@ ViewData["Title"] = "Catalog";
         const catalogForm = document.getElementById('catalogForm');
         const hiddenSortBy = document.getElementById('hiddenSortBy');
         const hiddenSortOrder = document.getElementById('hiddenSortOrder');
+        const favoriteButtons = document.querySelectorAll('.favorite-btn');
 
-        // Показать/скрыть кнопку очистки поиска
+        // Анимация при наведении на кнопку избранного
+        favoriteButtons.forEach(button => {
+            button.addEventListener('mouseover', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            button.addEventListener('mouseout', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                // Добавляем анимацию при клике
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+
+        // Управление поиском
         function toggleClearButton() {
             if (searchInput.value.trim() !== '') {
                 clearSearch.style.display = 'block';
@@ -141,5 +156,3 @@ ViewData["Title"] = "Catalog";
         });
     });
 </script>
-</body>
-</html>

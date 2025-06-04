@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Управление пользователями";
 }
+<link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true"/>
 
 <div class="container mt-4">
     <partial name="_AdminNavigation" />
@@ -54,7 +55,7 @@
                             <td>
                                 <div class="btn-group">
                                     <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
-                                    <button type="button" class="btn btn-danger btn-sm" 
+                                    <button type="button" class="btn btn-secondary btn-sm"
                                             onclick="deleteUser(@user.Id)">Удалить</button>
                                 </div>
                             </td>

@@ -1,57 +1,106 @@
 @model Product
 <link rel="stylesheet" href="~/css/ProductDetails.css" asp-append-version="true"/>
 
-<h2>@Model.Name</h2>
-<img src="@Model.Image" alt="@Model.Name" />
-<p>Цена: @Model.Price</p>
-<p>Категория: @Model.Category</p>
-<p>@Model.Description</p>
+<div class="product-details">
+    <div class="product-container">
+        <!-- Левая колонка с изображением -->
+        <div class="product-image">
+            <img src="@Model.Image" alt="@Model.Name" />
+        </div>
+        
+        <!-- Правая колонка с информацией -->
+        <div class="product-info">
+            <div class="product-header">
+                <h1 class="product-title">@Model.Name</h1>
+                <div class="product-price">@Model.Price ₽</div>
+            </div>
+            
+            <div class="product-actions">
+                @if (ViewBag.InCart)
+                {
+                    <a asp-controller="Cart" asp-action="Index" class="btn btn-view-cart">
+                        <span>В корзине</span>
+                    </a>
+                }
+                else
+                {
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post" class="cart-form">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-add-cart">
+                            <span>Добавить в корзину</span>
+                        </button>
+                    </form>
+                }
+                
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-controller="Favorite" asp-action="Toggle" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <button type="submit" class="favorite-btn">
+                            ♡
+                        </button>
+                    </form>
+                }
+            </div>
+            
+            <div class="product-meta">
+                <p class="product-category">Категория: @Model.Category</p>
+                <p class="product-description">@Model.Description</p>
+            </div>
+        </div>
+    </div>
 
-<div class="favorite-container">
-    @if (User.Identity.IsAuthenticated)
-    {
-    <form asp-controller="Favorite" asp-action="Toggle" method="post">
-        <input type="hidden" name="productId" value="@Model.Id" />
-        <button type="submit" class="favorite-btn">
-            ♡
-        </button>
-    </form>
-    }
+    <!-- Секция отзывов -->
+    <div class="reviews-section">
+        <div class="reviews-header">
+            <h2 class="reviews-title">Отзывы о товаре</h2>
+            <div class="average-rating">
+                @await Component.InvokeAsync("AverageRating", new { productId = Model.Id })
+            </div>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["Error"]
+            </div>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="review-form">
+                @await Html.PartialAsync("_AddReview", new ReviewViewModel { ProductId = Model.Id })
+            </div>
+        }
+        else
+        {
+            <p class="review-login-prompt">
+                <a href="@Url.Action("Login", "Account", new { returnUrl = Context.Request.Path })">Войдите</a>,
+                чтобы оставить отзыв
+            </p>
+        }
+
+        <div class="reviews-list">
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                foreach (var review in Model.Reviews.OrderByDescending(r => r.Date))
+                {
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-author">@review.User.Username</span>
+                            <span class="review-date">@review.Date.ToString("dd.MM.yyyy")</span>
+                        </div>
+                        <div class="review-rating">
+                            @Html.DisplayFor(model => review)
+                        </div>
+                        <p class="review-text">@review.Text</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="no-reviews">Пока нет отзывов. Будьте первым!</p>
+            }
+        </div>
+    </div>
 </div>
-
-<!-- Динамическая кнопка корзины -->
-@if (ViewBag.InCart)
-{
-<a asp-controller="Cart" asp-action="Index" class="btn btn-view-cart">Добавлено в корзину</a>
-}
-else
-{
-<form asp-controller="Cart" asp-action="AddToCart" method="post" class="cart-form">
-    <input type="hidden" name="productId" value="@Model.Id" />
-    <button type="submit" class="btn btn-add-cart">Добавить в корзину</button>
-</form>
-}
-
-<h3>Отзывы</h3>
-@if (TempData["Error"] != null)
-{
-<div class="alert alert-danger">
-    @TempData["Error"]
-</div>
-}
-@if (User.Identity.IsAuthenticated)
-{
-@await Html.PartialAsync("_AddReview", new ReviewViewModel { ProductId = Model.Id })
-}
-else
-{
-<p>Войдите, чтобы оставить отзыв.</p>
-}
-
-@await Component.InvokeAsync("AverageRating", new { productId = Model.Id })
-<hr />
-@foreach (var review in Model.Reviews)
-{
-    @Html.DisplayFor(model => review)
-}
-<hr />

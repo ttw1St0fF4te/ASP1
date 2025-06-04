@@ -1,20 +1,17 @@
 @model PR1.Models.Cart
 
 @{
-ViewData["Title"] = "Cart";
+    ViewData["Title"] = "Корзина";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/css/CartPage.css" asp-append-version="true"/>
-</head>
-<body>
+<link rel="stylesheet" href="~/css/CartPage.css" asp-append-version="true"/>
+
 <div class="cart-page">
     @Html.AntiForgeryToken()
-    <h1>Корзина</h1>
+    
+    <div class="cart-header">
+        <h1>Корзина</h1>
+    </div>
 
     <div id="message-container">
         <div id="message" class="message"></div>
@@ -22,145 +19,127 @@ ViewData["Title"] = "Cart";
 
     @if (Model.CartItems.Any())
     {
-    <div class="cart-items">
-        @foreach (var item in Model.CartItems)
-        {
-        <div class="cart-item" data-item-id="@item.Id">
-            <h3>@item.Product.Name</h3>
-            <img src="@item.Product.Image" alt="@item.Product.Name" />
-            <p>Цена: @item.Product.Price руб.</p>
-            <p>@item.Product.Description</p>
+        <div class="cart-container">
+            <div class="cart-items">
+                @foreach (var item in Model.CartItems)
+                {
+                    <div class="cart-item" data-item-id="@item.Id">
+                        <div class="cart-item-image">
+                            <img src="@item.Product.Image" alt="@item.Product.Name" />
+                        </div>
+                        
+                        <div class="cart-item-content">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">@item.Product.Name</h3>
+                                <p class="cart-item-description">@item.Product.Description</p>
+                                <div class="cart-item-price">@item.Product.Price.ToString("F2") ₽</div>
+                            </div>
 
-            <div class="quantity-controls">
-                <button type="button" class="quantity-btn decrease-btn" data-item-id="@item.Id">-</button>
-                <span class="quantity-display" id="quantity-@item.Id">@item.Quantity</span>
-                <button type="button" class="quantity-btn increase-btn" data-item-id="@item.Id">+</button>
+                            <div class="cart-item-actions">
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn decrease-btn" data-item-id="@item.Id">−</button>
+                                    <span class="quantity-display" id="quantity-@item.Id">@item.Quantity</span>
+                                    <button type="button" class="quantity-btn increase-btn" data-item-id="@item.Id">+</button>
+                                </div>
+
+                                <div class="item-total" id="item-total-@item.Id">
+                                    <span>@((item.Quantity * item.Product.Price).ToString("F2")) ₽</span>
+                                </div>
+
+                                <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                                    <input type="hidden" name="cartItemId" value="@item.Id" />
+                                    <button type="submit" class="remove-btn">✕</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
 
-            <p class="item-total" id="item-total-@item.Id">
-                Итого: <span>@((item.Quantity * item.Product.Price).ToString("F2"))</span> руб.
-            </p>
-
-            <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
-                <input type="hidden" name="cartItemId" value="@item.Id" />
-                <button type="submit">Удалить из корзины</button>
-            </form>
+            <div class="cart-summary">
+                <div class="cart-total">
+                    <span>Итого:</span>
+                    <h3 id="cart-total">@(Model.CartItems.Sum(ci => ci.Quantity * ci.Product.Price).ToString("F2")) ₽</h3>
+                </div>
+                
+                <a asp-action="Checkout" asp-controller="Cart" class="checkout-btn">
+                    <span>Перейти к оформлению</span>
+                </a>
+            </div>
         </div>
-        }
-    </div>
-
-    <div class="cart-total">
-        <h3 id="cart-total">Общая сумма: @(Model.CartItems.Sum(ci => ci.Quantity * ci.Product.Price).ToString("F2")) руб.</h3>
-    </div>
-
-    <a asp-action="Checkout" asp-controller="Cart" class="checkout-btn">Перейти к оформлению</a>
     }
     else
     {
-    <p>Ваша корзина пуста.</p>
+        <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <p>Ваша корзина пуста</p>
+            <a asp-controller="Catalog" asp-action="Index" class="continue-shopping">Перейти в каталог</a>
+        </div>
     }
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Получаем токен для защиты от CSRF
-        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
-        const token = tokenInput ? tokenInput.value : '';
+document.addEventListener('DOMContentLoaded', function() {
+    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+    const token = tokenInput ? tokenInput.value : '';
 
-        if (!token) {
-            console.error('CSRF token not found!');
-            return;
-        }
+    if (!token) {
+        console.error('CSRF token not found!');
+        return;
+    }
 
-        // Функция для показа сообщений
-        function showMessage(message, isError = false) {
-            const messageDiv = document.getElementById('message');
-            const messageContainer = document.getElementById('message-container');
+    function showMessage(message, isError = false) {
+        const messageDiv = document.getElementById('message');
+        const messageContainer = document.getElementById('message-container');
 
-            messageDiv.textContent = message;
-            messageDiv.className = 'message ' + (isError ? 'error' : 'success');
-            messageDiv.style.display = 'block';
+        messageDiv.textContent = message;
+        messageDiv.className = `message ${isError ? 'error' : 'success'}`;
+        messageContainer.style.display = 'flex';
+        messageDiv.style.display = 'block';
 
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 3000);
-        }
+        setTimeout(() => {
+            messageContainer.style.display = 'none';
+            messageDiv.style.display = 'none';
+        }, 3000);
+    }
 
-        // Обработчики для кнопок увеличения количества
-        document.querySelectorAll('.increase-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const itemId = this.getAttribute('data-item-id');
+    function updateQuantity(itemId, action) {
+        const formData = new FormData();
+        formData.append('cartItemId', itemId);
+        formData.append('__RequestVerificationToken', token);
 
-                const formData = new FormData();
-                formData.append('cartItemId', itemId);
-                formData.append('__RequestVerificationToken', token);
-
-                fetch('/Cart/IncreaseQuantity', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Обновляем количество
-                            document.getElementById(`quantity-${itemId}`).textContent = data.newQuantity;
-
-                            // Обновляем сумму по товару
-                            document.querySelector(`#item-total-${itemId} span`).textContent = data.itemTotal.toFixed(2);
-
-                            // Обновляем общую сумму корзины
-                            document.getElementById('cart-total').textContent = `Общая сумма: ${data.cartTotal.toFixed(2)} руб.`;
-
-                            showMessage('Количество товара увеличено');
-                        } else {
-                            showMessage(data.message, true);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showMessage('Произошла ошибка при обновлении количества', true);
-                    });
-            });
+        fetch(`/Cart/${action}Quantity`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById(`quantity-${itemId}`).textContent = data.newQuantity;
+                document.querySelector(`#item-total-${itemId} span`).textContent = `${data.itemTotal.toFixed(2)} ₽`;
+                document.getElementById('cart-total').textContent = `${data.cartTotal.toFixed(2)} ₽`;
+                
+                showMessage(`Количество товара ${action === 'Increase' ? 'увеличено' : 'уменьшено'}`);
+            } else {
+                showMessage(data.message, true);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Произошла ошибка при обновлении количества', true);
         });
+    }
 
-        // Обработчики для кнопок уменьшения количества
-        document.querySelectorAll('.decrease-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const itemId = this.getAttribute('data-item-id');
-
-                const formData = new FormData();
-                formData.append('cartItemId', itemId);
-                formData.append('__RequestVerificationToken', token);
-
-                fetch('/Cart/DecreaseQuantity', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Обновляем количество
-                            document.getElementById(`quantity-${itemId}`).textContent = data.newQuantity;
-
-                            // Обновляем сумму по товару
-                            document.querySelector(`#item-total-${itemId} span`).textContent = data.itemTotal.toFixed(2);
-
-                            // Обновляем общую сумму корзины
-                            document.getElementById('cart-total').textContent = `Общая сумма: ${data.cartTotal.toFixed(2)} руб.`;
-
-                            showMessage('Количество товара уменьшено');
-                        } else {
-                            showMessage(data.message, true);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showMessage('Произошла ошибка при обновлении количества', true);
-                    });
-            });
+    document.querySelectorAll('.increase-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            updateQuantity(this.getAttribute('data-item-id'), 'Increase');
         });
     });
-</script>
 
-</body>
-</html>
+    document.querySelectorAll('.decrease-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            updateQuantity(this.getAttribute('data-item-id'), 'Decrease');
+        });
+    });
+});
+</script>

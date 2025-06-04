@@ -1,56 +1,39 @@
 @{
     ViewData["Title"] = "Панель администратора";
 }
+<link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true"/>
 
-<div class="container mt-4">
+<div class="admin-container">
     <partial name="_AdminNavigation" />
     
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h2>Добро пожаловать в панель администратора</h2>
-            <p class="lead">Выберите раздел для управления в меню выше</p>
-        </div>
+    <div class="admin-header">
+        <h2>Добро пожаловать в панель администратора</h2>
+        <p class="subtitle">Выберите раздел для управления в меню выше</p>
     </div>
 
-    <div class="row mt-4">
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Пользователи</h5>
-                    <p class="card-text">Управление пользователями системы</p>
-                    <a asp-action="Users" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
+    <div class="admin-grid">
+        <div class="admin-card">
+            <h3>Пользователи</h3>
+            <p>Управление пользователями системы</p>
+            <a asp-action="Users" class="admin-button">Перейти</a>
         </div>
 
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Товары</h5>
-                    <p class="card-text">Управление каталогом товаров</p>
-                    <a asp-action="Products" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
+        <div class="admin-card">
+            <h3>Товары</h3>
+            <p>Управление каталогом товаров</p>
+            <a asp-action="Products" class="admin-button">Перейти</a>
         </div>
 
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Отзывы</h5>
-                    <p class="card-text">Модерация отзывов пользователей</p>
-                    <a asp-action="Reviews" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
+        <div class="admin-card">
+            <h3>Отзывы</h3>
+            <p>Модерация отзывов пользователей</p>
+            <a asp-action="Reviews" class="admin-button">Перейти</a>
         </div>
 
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Заказы</h5>
-                    <p class="card-text">Управление заказами</p>
-                    <a asp-action="Orders" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
+        <div class="admin-card">
+            <h3>Заказы</h3>
+            <p>Управление заказами</p>
+            <a asp-action="Orders" class="admin-button">Перейти</a>
         </div>
     </div>
 </div>

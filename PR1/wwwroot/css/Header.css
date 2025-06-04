@@ -1,11 +1,12 @@
 .header {
-    background-color: #ce000c;
+    background-color: #1a237e;
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 15px 0;
     font-size: 16px;
-    font-weight: bold;
-    justify-content: space-between; /* Ensure space between navigation and login partial */
+    font-weight: 500;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .navigation ul {
@@ -16,43 +17,61 @@
 }
 
 .navigation li {
-    margin: 0 10px;
+    margin: 0 15px;
     align-content: center;
 }
 
 .navigation a {
     color: #ffffff;
     text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
 .navigation a:hover {
-    color: #D3D3D3;
+    background-color: rgba(0, 188, 212, 0.2);
+    color: #fff;
 }
 
 .img {
     margin-left: 25px;
     width: 100px;
+    transition: transform 0.3s ease;
+}
+
+.img:hover {
+    transform: scale(1.05);
 }
 
 .login-partial {
     display: flex;
     align-items: center;
-    margin-right: 25px;
     list-style: none;
     font-size: 16px;
-    font-weight: bold;
-    margin: 0 10px;
+    font-weight: 500;
+    
+    margin: 0; /* Remove inner margins */
+    padding: 0; /* Remove inner padding */
 }
 
 .login-partial a {
     color: #ffffff;
     text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 .login-partial a:hover {
-    color: #D3D3D3;
+    background-color: rgba(0, 188, 212, 0.2);
+    color: #fff;
 }
 
 .login-partial li {
-    margin: 0 10px; /* Add spacing between items */
+    margin: 0 8px;
+}
+
+.login-partial li:last-child a {
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }

@@ -3,8 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - PR1</title>
+    <title>MOE Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/Header.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/Footer.css" asp-append-version="true"/>
 </head>
@@ -30,19 +32,18 @@
     </div>
 </header>
 <div class="container">
-    <main role="main" class="pb-3">
+    <main role="main">
         @RenderBody()
     </main>
 </div>
 
 <footer class="footer">
     <div class="footer-content">
-        <p>MOE Shop</p>
-        <p class="signa">Новиков Е.Е.</p>
+        <p>MOE Shop - Ваш стиль, ваш выбор</p>
+        <p class="signa">© 2025 Новиков Е.Е.</p>
     </div>
 </footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -1,13 +1,6 @@
 @model Review
 
-<div class="review">
-    <strong>@Model.User.Username</strong>
-    <div>
-        @for (int i = 0; i < 5; i++)
-        {
-            <span style="color: @(i < Model.Rating ? "gold" : "gray")">&#9733;</span>
-        }
-    </div>
-    <p>@Model.Text</p>
-    <small>@Model.Date.ToShortDateString()</small>
-</div>
+@for (int i = 0; i < 5; i++)
+{
+    <span style="color: @(i < Model.Rating ? "gold" : "gray")">&#9733;</span>
+}

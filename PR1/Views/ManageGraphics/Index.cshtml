@@ -1,35 +1,41 @@
 @model PR1.Controllers.ManageGraphicsViewModel
 
 @{
-    ViewData["Title"] = "Manage Graphics";
+    ViewData["Title"] = "Управление графикой";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Graphics</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div class="manage-graphics">
-        <h1>Управление графикой</h1>
-        <div>
-            <canvas id="totalSalesChart" width="100" height="50"></canvas>
+<link rel="stylesheet" href="~/css/ManageGraphics.css" asp-append-version="true"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="manage-graphics">
+    <h1>Управление графикой</h1>
+    
+    <div class="charts-container">
+        <div class="chart-wrapper">
+            <canvas id="totalSalesChart"></canvas>
         </div>
-        <div>
-            <canvas id="productSalesChart" width="100" height="50"></canvas>
+        <div class="chart-wrapper">
+            <canvas id="productSalesChart"></canvas>
         </div>
-        <form asp-controller="Export" asp-action="ExportSalesReport" method="get">
-            <button type="submit">Экспортировать отчет в PDF</button>
-        </form>
     </div>
+    
+    <form asp-controller="Export" asp-action="ExportSalesReport" method="get">
+        <button type="submit" class="export-button">Экспортировать отчет в PDF</button>
+    </form>
+</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var totalSales = @Model.TotalSales;
             var productSales = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ProductSales));
+
+            // Определение цветов в соответствии с общим стилем
+            const primaryColor = '#1a237e';
+            const accentColor = '#00bcd4';
+            const baseColors = [
+                '#1a237e', '#00bcd4', '#3949ab', '#00acc1', 
+                '#303f9f', '#0097a7', '#283593', '#00838f'
+            ];
 
             // Total Sales Chart
             var ctxTotalSales = document.getElementById('totalSalesChart').getContext('2d');
@@ -40,15 +46,41 @@
                     datasets: [{
                         label: 'Общее количество продаж',
                         data: [totalSales],
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        backgroundColor: accentColor,
+                        borderColor: primaryColor,
+                        borderWidth: 2,
+                        borderRadius: 8
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Общее количество продаж',
+                            color: primaryColor,
+                            font: {
+                                size: 16,
+                                weight: 'bold',
+                                family: "'Poppins', sans-serif"
+                            }
                         }
                     }
                 }
@@ -57,38 +89,47 @@
             // Product Sales Chart
             var ctxProductSales = document.getElementById('productSalesChart').getContext('2d');
             var productSalesChart = new Chart(ctxProductSales, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: productSales.map(ps => ps.ProductName),
                     datasets: [{
-                        label: 'Распределение продаж товаров',
                         data: productSales.map(ps => ps.TotalQuantity),
-                        backgroundColor: productSales.map((ps, index) => {
-                            // Generate unique colors for each segment
-                            var colors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'];
-                            return colors[index % colors.length];
-                        }),
-                        borderColor: productSales.map((ps, index) => {
-                            var colors = ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'];
-                            return colors[index % colors.length];
-                        }),
-                        borderWidth: 1
+                        backgroundColor: productSales.map((_, index) => 
+                            baseColors[index % baseColors.length]
+                        ),
+                        borderColor: 'white',
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
                     plugins: {
                         legend: {
-                            position: 'top',
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: "'Open Sans', sans-serif"
+                                },
+                                padding: 20
+                            }
                         },
                         title: {
                             display: true,
-                            text: 'Распределение продаж товаров'
+                            text: 'Распределение продаж товаров',
+                            color: primaryColor,
+                            font: {
+                                size: 16,
+                                weight: 'bold',
+                                family: "'Poppins', sans-serif"
+                            },
+                            padding: {
+                                bottom: 20
+                            }
                         }
                     }
                 }
             });
         });
     </script>
-</body>
-</html>
