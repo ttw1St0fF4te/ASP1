@@ -1,0 +1,9 @@
+@model IEnumerable<PR1.Models.UserRole>
+@{
+    var selectedRoleId = (int?)ViewBag.SelectedRoleId;
+}
+
+@foreach (var role in Model)
+{
+    <option value="@role.Id" selected="@(role.Id == selectedRoleId)">@role.Role</option>
+}

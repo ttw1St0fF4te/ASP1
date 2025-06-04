@@ -1,0 +1,31 @@
+@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link @(currentAction == "Index" ? "active" : "")" asp-controller="Admin" asp-action="Index">
+            Панель управления
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentAction == "Users" ? "active" : "")" asp-controller="Admin" asp-action="Users">
+            Пользователи
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentAction == "Products" ? "active" : "")" asp-controller="Admin" asp-action="Products">
+            Товары
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentAction == "Reviews" ? "active" : "")" asp-controller="Admin" asp-action="Reviews">
+            Отзывы
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentAction == "Orders" ? "active" : "")" asp-controller="Admin" asp-action="Orders">
+            Заказы
+        </a>
+    </li>
+</ul>

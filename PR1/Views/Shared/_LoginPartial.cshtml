@@ -16,6 +16,12 @@ var user = context.User;
             <a asp-area="" asp-controller="ManageGraphics" asp-action="Index">Управление графикой</a>
         </li>
     }
+    @if (user.IsInRole("admin"))
+    {
+        <li>
+            <a asp-area="" asp-controller="Admin" asp-action="Index">Панель администратора</a>
+        </li>
+    }
     else
     {
         <li>
@@ -24,13 +30,13 @@ var user = context.User;
         <li>
             <a asp-area="" asp-controller="Favorite" asp-action="Index">Избранное</a>
         </li>
+        <li>
+            <a href="@Url.Action("Index", "Profile")">@user.Identity.Name</a>
+        </li>
     }
     
     <li>
         <a asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
-    </li>
-    <li>
-        <a href="@Url.Action("Index", "Profile")">@user.Identity.Name</a>
     </li>
 </ul>
 }

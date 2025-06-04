@@ -29,5 +29,13 @@ public class AppDbContext : DbContext
             .HasOne(u => u.UserRole)
             .WithMany()
             .HasForeignKey(u => u.UserRoleId);
+            
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn() // Всегда использовать Identity для генерации
+                .HasIdentityOptions(startValue: 1); // Начинать с 1
+        });
     }
 }

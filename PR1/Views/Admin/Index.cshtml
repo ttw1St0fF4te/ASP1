@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Панель администратора";
+}
+
+<div class="container mt-4">
+    <partial name="_AdminNavigation" />
+    
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h2>Добро пожаловать в панель администратора</h2>
+            <p class="lead">Выберите раздел для управления в меню выше</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Пользователи</h5>
+                    <p class="card-text">Управление пользователями системы</p>
+                    <a asp-action="Users" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Товары</h5>
+                    <p class="card-text">Управление каталогом товаров</p>
+                    <a asp-action="Products" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Отзывы</h5>
+                    <p class="card-text">Модерация отзывов пользователей</p>
+                    <a asp-action="Reviews" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Заказы</h5>
+                    <p class="card-text">Управление заказами</p>
+                    <a asp-action="Orders" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.nav-tabs .nav-link {
+    color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    border-color: #007bff #dee2e6 #fff;
+}
+</style>
